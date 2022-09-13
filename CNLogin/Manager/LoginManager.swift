@@ -84,15 +84,15 @@ class LoginManager: ObservableObject {
   
   /// 執行註冊帳號 成功並帶登入
   func register(pass: String, repass: String,
-                alert: @escaping ((_ title: String, _ msg: String)->Void)) {
+                alert: @escaping ((_ isSuccess: Bool, _ msg: String)->Void)) {
     
     guard LoginManager.shared.mail != "" && pass != "" && repass != "" else {
-      alert("Error", "Please fill all the contents properly")
+      alert(false, "Please fill all the contents properly")
       return
     }
     
     guard pass == repass else {
-      alert("Error", "Password mismatch")
+      alert(false, "Password mismatch")
       return
     }
     
@@ -101,18 +101,16 @@ class LoginManager: ObservableObject {
     Auth.auth().createUser(withEmail: mail, password: pass) { (res, err) in
       
       if let err = err {
-        alert("Error", err.localizedDescription)
+        alert(false, err.localizedDescription)
         return
       }
       
-      // 註冊成功帶登入
-      LoginManager.shared.login { err in
-        if let err = err {
-          alert("Error", err)
-          return
-        } // 成功登入
-        alert("Register Success", "Welcom")
-      }
+      UserDefaults.set(LoginManager.shared.mail, forKey: .rememberMailKey)
+      UserDefaults.set(LoginManager.shared.pass, forKey: .rememberPassKey)
+      
+      // 成功註冊
+      alert(true, "Register Success Welcome!\nLogin now?")
+      
     }
   }
 

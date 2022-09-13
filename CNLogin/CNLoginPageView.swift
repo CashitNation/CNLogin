@@ -253,6 +253,8 @@ struct CNSignUpView: View {
   @State private var visible = false
   @State private var revisible = false
   
+  @State private var isSuccessRegister = false
+  
   var body: some View {
     
     VStack {
@@ -326,8 +328,9 @@ struct CNSignUpView: View {
       .shadow(radius: 8)
       
       Button {
-        loginManager.register(pass: pass, repass: repass) { title, msg in
-          alertManager.show(title: title, msg: msg)
+        loginManager.register(pass: pass, repass: repass) { isSuccess, msg in
+          isSuccessRegister = isSuccess
+          alertManager.show(title: isSuccess ? "Success" : "Error", msg: msg)
         }
       } label: {
         Text("Sign Up")
@@ -340,9 +343,33 @@ struct CNSignUpView: View {
     }
     .alert(alertManager.title,
            isPresented: $alertManager.isShow) {
-      Button("OK", role: .cancel) {
-        alertManager.close()
+      
+      if isSuccessRegister {
+        
+        Button("Later", role: .cancel) {
+          alertManager.close()
+        }
+        
+        Button("Login") {
+          alertManager.close()
+          loginManager.login { err in
+            if let err = err {
+              alertManager.show(title: "Error", msg: err)
+            }else {
+              alertManager.close()
+            }
+            
+          }
+        }
+        
+      }else {
+        
+        Button("OK", role: .cancel) {
+          alertManager.close()
+        }
+        
       }
+      
     } message: {
       Text(alertManager.message)
     }
