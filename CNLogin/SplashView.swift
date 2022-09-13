@@ -9,22 +9,21 @@ import SwiftUI
 
 struct SplashView: View {
   
-  @ObservedObject private var loginManager = LoginManager.shared
+  @StateObject private var loginManager = LoginManager.shared
   
-  @State private var isChecking: Bool = true
+  
   
   var body: some View {
     
     NavigationView {
       ZStack {
-        if isChecking {
-          ActivityIndicator(isAnimating: .constant(true),
-                            style: .large)
-        } else if loginManager.isLogin {
+        
+        if loginManager.isLogin {
           MainView()
         }else {
           CNLoginPageView()
         }
+        
       }
       .navigationTitle("")
       .navigationBarHidden(true)
@@ -33,7 +32,7 @@ struct SplashView: View {
         
         loginManager.addObserverLogin()
         loginManager.autoLogin { isSuccess in
-          self.isChecking = false
+          loginManager.isLogin = isSuccess
         }
         
       }

@@ -25,8 +25,8 @@ struct CNLoginPageView: View {
   @State var signMode: SignModeSwitch.SignMode = .login
   
   var body: some View {
-    
     ZStack {
+      Color.yellow.ignoresSafeArea()
       
       ScrollView(.vertical, showsIndicators: false) {
         VStack {
@@ -49,10 +49,10 @@ struct CNLoginPageView: View {
         }
       }
       .padding()
-      
+      .onTapGesture {
+        UIApplication.shared.endEditing()
+      }
     }
-    .background(.green)
-    
   }
   /// 取得登入/註冊畫面 帳密輸入框&確認
   private func containedSignModeView() -> AnyView {
@@ -152,42 +152,91 @@ struct SignModeSwitch: View {
 // MARK: 登入畫面
 struct CNLoginView: View {
   
-  @ObservedObject private var loginManager = LoginManager.shared
+  @StateObject private var loginManager = LoginManager.shared
   
-  @ObservedObject private var alertManager = AlertManager()
+  @StateObject private var alertManager = AlertManager()
   
   // 使否顯示密碼
   @State var visible = false
+  
+  private enum Field: Int, Hashable {
+    case mail, pass
+  }
+  
+  @FocusState private var focusedField: Field?
   
   var body: some View {
     
     VStack {
       
+      // 登入輸入框
       VStack {
         
+        // 輸入信箱
         HStack {
           
           Image(systemName: "envelope")
-          
-          TextField("Enter Email Address", text: $loginManager.mail)
+            .foregroundColor(.gray)
+            .frame(width: 24, height: 24, alignment: .center)
+          TextField("", text: $loginManager.inputMail)
             .accentColor(.gray)
+            .foregroundColor(.gray)
+            .placeholder(when: loginManager.inputMail.isEmpty, placeholder: {
+              Text("Enter Email Address")
+                .foregroundColor(.gray.opacity(0.6))
+            })
+            .focused($focusedField, equals: .mail)
+            .textContentType(.emailAddress)
+            .submitLabel(.next)
+            .onSubmit {
+              if focusedField == .mail {
+                focusedField = .pass
+              }
+            }
         }
         .padding()
+        .onTapGesture {
+          focusedField = .mail
+        }
         
         Divider()
         
+        // 輸入密碼
         HStack {
           
           Image(systemName: "lock")
-          
+            .foregroundColor(.gray)
+            .frame(width: 24, height: 24, alignment: .center)
           if visible {
-            TextField("Enter Password", text: $loginManager.pass)
-            
+            TextField("", text: $loginManager.inputPass)
               .accentColor(.gray)
+              .foregroundColor(.gray)
+              .placeholder(when: loginManager.inputPass.isEmpty, placeholder: {
+                Text("Enter Password")
+                  .foregroundColor(.gray.opacity(0.6))
+              })
+              .focused($focusedField, equals: .pass)
+              .submitLabel(.done)
+              .onSubmit {
+                if focusedField == .pass {
+                  didTapLogin()
+                }
+              }
           }else {
-            SecureField("Enter Password", text: $loginManager.pass)
-            
+            SecureField("", text: $loginManager.inputPass)
               .accentColor(.gray)
+              .foregroundColor(.gray)
+              .placeholder(when: loginManager.inputPass.isEmpty, placeholder: {
+                Text("Enter Password")
+                  .foregroundColor(.gray.opacity(0.6))
+              })
+              .focused($focusedField, equals: .pass)
+              .submitLabel(.done)
+              .onSubmit {
+                if focusedField == .pass {
+                  didTapLogin()
+                }
+              }
           }
           
           Button {
@@ -199,7 +248,9 @@ struct CNLoginView: View {
           
         }
         .padding()
-        
+        .onTapGesture {
+          focusedField = .pass
+        }
       }
       .background(.white)
       .cornerRadius(16)
@@ -207,14 +258,9 @@ struct CNLoginView: View {
       .padding()
       .shadow(radius: 8)
       
+      // 登入按鈕
       Button {
-        loginManager.login { err in
-          if let err = err {
-            alertManager.show(title: "Error", msg: err)
-          }else {
-            print("Login Success")
-          }
-        }
+        didTapLogin()
       } label: {
         Text("Log In")
           .padding()
@@ -235,6 +281,16 @@ struct CNLoginView: View {
     
   }
   
+  /// 觸發登入按鈕
+  private func didTapLogin() {
+    loginManager.login { err in
+      if let err = err {
+        alertManager.show(title: "Error", msg: err)
+      }else {
+        print("Login Success")
+      }
+    }
+  }
 }
 
 
@@ -242,9 +298,9 @@ struct CNLoginView: View {
 // MARK: 註冊畫面
 struct CNSignUpView: View {
   
-  @ObservedObject private var loginManager = LoginManager.shared
+  @StateObject private var loginManager = LoginManager.shared
   
-  @ObservedObject private var alertManager = AlertManager()
+  @StateObject private var alertManager = AlertManager()
   
   @State private var pass = ""
   @State private var repass = ""
@@ -255,35 +311,84 @@ struct CNSignUpView: View {
   
   @State private var isSuccessRegister = false
   
+  private enum Field: Int, Hashable {
+    case mail, pass, repass
+  }
+  
+  @FocusState private var focusedField: Field?
+  
   var body: some View {
     
     VStack {
       
+      // 註冊輸入框
       VStack {
         
+        // 輸入信箱
         HStack {
           
           Image(systemName: "envelope")
+            .foregroundColor(.gray)
+            .frame(width: 24, height: 24, alignment: .center)
           
-          TextField("Enter Email Address", text: $loginManager.mail)
+          TextField("Enter Email Address", text: $loginManager.inputMail)
+            .placeholder(when: loginManager.inputMail.isEmpty, placeholder: {
+              Text("Enter Email Address")
+                .foregroundColor(.gray.opacity(0.6))
+            })
             .accentColor(.gray)
+            .foregroundColor(.gray)
+            .focused($focusedField, equals: .mail)
+            .textContentType(.emailAddress)
+            .submitLabel(.next)
+            .onSubmit {
+              if focusedField == .mail {
+                focusedField = .pass
+              }
+            }
         }
         .padding()
-        
+        .onTapGesture {
+          focusedField = .mail
+        }
         Divider()
         
+        // 輸入密碼
         HStack {
           
           Image(systemName: "lock")
-          
+            .frame(width: 24, height: 24, alignment: .center)
+            .foregroundColor(.gray)
           if visible {
             TextField("Enter Password", text: $pass)
-            
               .accentColor(.gray)
+              .foregroundColor(.gray)
+              .placeholder(when: pass.isEmpty, placeholder: {
+                Text("Enter Password")
+                  .foregroundColor(.gray.opacity(0.6))
+              })
+              .focused($focusedField, equals: .pass)
+              .submitLabel(.next)
+              .onSubmit {
+                if focusedField == .pass {
+                  focusedField = .repass
+                }
+              }
           }else {
             SecureField("Enter Password", text: $pass)
-            
               .accentColor(.gray)
+              .foregroundColor(.gray)
+              .placeholder(when: pass.isEmpty, placeholder: {
+                Text("Enter Password")
+                  .foregroundColor(.gray.opacity(0.6))
+              })
+              .focused($focusedField, equals: .pass)
+              .submitLabel(.next)
+              .onSubmit {
+                if focusedField == .pass {
+                  focusedField = .repass
+                }
+              }
           }
           
           Button {
@@ -295,19 +400,47 @@ struct CNSignUpView: View {
           
         }
         .padding()
-        
+        .onTapGesture {
+          focusedField = .pass
+        }
         Divider()
         
+        // 輸入再次密碼
         HStack {
           
           Image(systemName: "lock")
-          
+            .foregroundColor(.gray)
+            .frame(width: 24, height: 24, alignment: .center)
           if revisible {
             TextField("Re-Enter Password", text: $repass)
               .accentColor(.gray)
+              .foregroundColor(.gray)
+              .placeholder(when: repass.isEmpty, placeholder: {
+                Text("Re-Enter Password")
+                  .foregroundColor(.gray.opacity(0.6))
+              })
+              .focused($focusedField, equals: .repass)
+              .submitLabel(.done)
+              .onSubmit {
+                if focusedField == .repass {
+                  didTapSignUp()
+                }
+              }
           }else {
             SecureField("Re-Enter Password", text: $repass)
               .accentColor(.gray)
+              .foregroundColor(.gray)
+              .placeholder(when: repass.isEmpty, placeholder: {
+                Text("Re-Enter Password")
+                  .foregroundColor(.gray.opacity(0.6))
+              })
+              .focused($focusedField, equals: .repass)
+              .submitLabel(.done)
+              .onSubmit {
+                if focusedField == .repass {
+                  didTapSignUp()
+                }
+              }
           }
           
           Button {
@@ -319,7 +452,9 @@ struct CNSignUpView: View {
           
         }
         .padding()
-        
+        .onTapGesture {
+          focusedField = .repass
+        }
       }
       .background(.white)
       .cornerRadius(16)
@@ -327,11 +462,9 @@ struct CNSignUpView: View {
       .padding()
       .shadow(radius: 8)
       
+      // 註冊按鈕
       Button {
-        loginManager.register(pass: pass, repass: repass) { isSuccess, msg in
-          isSuccessRegister = isSuccess
-          alertManager.show(title: isSuccess ? "Success" : "Error", msg: msg)
-        }
+        didTapSignUp()
       } label: {
         Text("Sign Up")
           .padding()
@@ -344,29 +477,17 @@ struct CNSignUpView: View {
     .alert(alertManager.title,
            isPresented: $alertManager.isShow) {
       
-      if isSuccessRegister {
-        
-        Button("Later", role: .cancel) {
-          alertManager.close()
-        }
+      if isSuccessRegister { // 如果成功註冊 詢問是否要立即登入
+        Button("Later", role: .cancel) { alertManager.close() }
         
         Button("Login") {
           alertManager.close()
-          loginManager.login { err in
-            if let err = err {
-              alertManager.show(title: "Error", msg: err)
-            }else {
-              alertManager.close()
-            }
-            
-          }
+          didTapLogin()
         }
         
       }else {
         
-        Button("OK", role: .cancel) {
-          alertManager.close()
-        }
+        Button("OK", role: .cancel) { alertManager.close() }
         
       }
       
@@ -376,12 +497,32 @@ struct CNSignUpView: View {
     
     
   }
+  
+  // 觸發立即登入
+  private func didTapLogin() {
+    loginManager.login { err in
+      if let err = err {
+        alertManager.show(title: "Error", msg: err)
+      }else {
+        alertManager.close()
+      }
+    }
+  }
+  
+  // 觸發註冊按鈕
+  private func didTapSignUp() {
+    loginManager.register(pass: pass, repass: repass) { isSuccess, msg in
+      isSuccessRegister = isSuccess
+      alertManager.show(title: isSuccess ? "Success" : "Error", msg: msg)
+    }
+  }
+  
 }
 
 // MARK: 忘記密碼
 struct ForgetPassword: View {
   
-  @ObservedObject private var alertManager = AlertManager()
+  @StateObject private var alertManager = AlertManager()
   
   var body: some View {
     
@@ -424,6 +565,10 @@ struct ForgetPassword: View {
 // MARK: 三方登入
 struct ThirdPartyLogin: View {
   
+  @StateObject private var loginManager = LoginManager.shared
+  
+  @StateObject private var alertManager = AlertManager()
+  
   private let fbIcon = "https://cdn-icons-png.flaticon.com/512/124/124010.png"
   
   private let googleIcon = "https://cdn-icons-png.flaticon.com/512/300/300221.png"
@@ -444,6 +589,13 @@ struct ThirdPartyLogin: View {
       
       Button {
         print("Google Login")
+        loginManager.googleLogin { err in
+          if let err = err {
+            alertManager.show(title: "Error", msg: err)
+          }else {
+            print("GoogleLogin Success")
+          }
+        }
       } label: {
         iconImage(url: googleIcon)
       }
@@ -457,6 +609,14 @@ struct ThirdPartyLogin: View {
       .frame(width: iconWidth, height: iconWidth, alignment: .center)
       
     }
+    .alert(alertManager.title, isPresented: $alertManager.isShow) {
+      Button("Ok", role: .cancel) {
+        alertManager.close()
+      }
+    } message: {
+      Text(alertManager.message)
+    }
+    
     
   }
   
@@ -477,4 +637,10 @@ struct ThirdPartyLogin: View {
     return AnyView(img)
   }
   
+}
+
+extension UIApplication {
+  func endEditing() {
+    sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+  }
 }

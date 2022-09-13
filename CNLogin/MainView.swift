@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
   
-  @ObservedObject private var loginManager = LoginManager.shared
+  @StateObject private var loginManager = LoginManager.shared
   
     var body: some View {
         VStack {
@@ -30,8 +30,9 @@ struct MainView: View {
             }
             .padding()
 
-            
+          Text("\(loginManager.getEmail())")
         }
+      
     }
     
 }

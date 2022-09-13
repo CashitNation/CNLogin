@@ -10,16 +10,15 @@ import Foundation
 extension UserDefaults {
   
   enum KeyType: String {
-    // 是否登入
-    case isLoginKey = "isLoginKey"
     // 記住帳號
     case rememberMailKey = "rememberMailKey"
     // 記住密碼
     case rememberPassKey = "rememberPassKey"
+    // 登入方式
+    case loginTypeKey = "loginTypeKey"
   }
   
   static func get(forKey key: KeyType) -> Any? {
-    
     return UserDefaults.standard.value(forKey: key.rawValue)
   }
   
