@@ -41,6 +41,8 @@ class LoginManager: ObservableObject {
     UserDefaults.set(false, forKey: .isLoginKey)
     NotificationCenter.post(forKey: .isLoginKey)
     LoginManager.shared.isLogin = false
+    UserDefaults.set("", forKey: .rememberMailKey)
+    UserDefaults.set("", forKey: .rememberPassKey)
   }
   
   /// 執行刪除帳號並登出

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Firebase
 
 struct CNLoginPageView_Previews: PreviewProvider {
   static var previews: some View {

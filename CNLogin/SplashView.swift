@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Firebase
 
 struct SplashView: View {
   
@@ -34,7 +33,7 @@ struct SplashView: View {
         
         loginManager.addObserverLogin()
         loginManager.autoLogin { isSuccess in
-          self.isChecking = !isSuccess
+          self.isChecking = false
         }
         
       }

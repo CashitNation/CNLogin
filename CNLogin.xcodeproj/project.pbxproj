@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1108A56928D0B0AF007E19AA /* ExtensionUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1108A56828D0B0AF007E19AA /* ExtensionUserDefaults.swift */; };
+		1108A56B28D0B0C6007E19AA /* ExtensionNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1108A56A28D0B0C6007E19AA /* ExtensionNotificationCenter.swift */; };
 		113E57F128C9E4840002AA9D /* CNLoginApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E57F028C9E4840002AA9D /* CNLoginApp.swift */; };
 		113E57F328C9E4840002AA9D /* CNLoginPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E57F228C9E4840002AA9D /* CNLoginPageView.swift */; };
 		113E57F528C9E4860002AA9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 113E57F428C9E4860002AA9D /* Assets.xcassets */; };
@@ -30,10 +32,11 @@
 		1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01D28D079D1002A9223 /* FirebaseStorageCombine-Community */; };
 		11EC9CC228D081E8003A6DD0 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC128D081E8003A6DD0 /* LoginManager.swift */; };
 		11EC9CC428D08441003A6DD0 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC328D08441003A6DD0 /* AlertManager.swift */; };
-		11EC9CC628D091AB003A6DD0 /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC528D091AB003A6DD0 /* UserDefaultManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1108A56828D0B0AF007E19AA /* ExtensionUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUserDefaults.swift; sourceTree = "<group>"; };
+		1108A56A28D0B0C6007E19AA /* ExtensionNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionNotificationCenter.swift; sourceTree = "<group>"; };
 		113E57ED28C9E4840002AA9D /* CNLogin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CNLogin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		113E57F028C9E4840002AA9D /* CNLoginApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CNLoginApp.swift; sourceTree = "<group>"; };
 		113E57F228C9E4840002AA9D /* CNLoginPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CNLoginPageView.swift; sourceTree = "<group>"; };
@@ -45,7 +48,6 @@
 		1197EFF828D07846002A9223 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		11EC9CC128D081E8003A6DD0 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		11EC9CC328D08441003A6DD0 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
-		11EC9CC528D091AB003A6DD0 /* UserDefaultManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1108A56C28D0B0F6007E19AA /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				1108A56A28D0B0C6007E19AA /* ExtensionNotificationCenter.swift */,
+				1108A56828D0B0AF007E19AA /* ExtensionUserDefaults.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		1108A56D28D0B106007E19AA /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				11EC9CC328D08441003A6DD0 /* AlertManager.swift */,
+				11EC9CC128D081E8003A6DD0 /* LoginManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
 		113E57E428C9E4840002AA9D = {
 			isa = PBXGroup;
 			children = (
@@ -93,13 +113,12 @@
 			children = (
 				113E57F028C9E4840002AA9D /* CNLoginApp.swift */,
 				113E580528CA1B180002AA9D /* SplashView.swift */,
-				113E57F228C9E4840002AA9D /* CNLoginPageView.swift */,
 				113E580328CA1A380002AA9D /* MainView.swift */,
-				11EC9CC128D081E8003A6DD0 /* LoginManager.swift */,
-				11EC9CC328D08441003A6DD0 /* AlertManager.swift */,
-				11EC9CC528D091AB003A6DD0 /* UserDefaultManager.swift */,
-				1197EFF828D07846002A9223 /* GoogleService-Info.plist */,
+				113E57F228C9E4840002AA9D /* CNLoginPageView.swift */,
+				1108A56D28D0B106007E19AA /* Manager */,
+				1108A56C28D0B0F6007E19AA /* Extension */,
 				113E57FE28C9EBEC0002AA9D /* Tools */,
+				1197EFF828D07846002A9223 /* GoogleService-Info.plist */,
 				113E57F428C9E4860002AA9D /* Assets.xcassets */,
 				113E57F628C9E4860002AA9D /* Preview Content */,
 			);
@@ -212,13 +231,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				113E57F328C9E4840002AA9D /* CNLoginPageView.swift in Sources */,
+				1108A56B28D0B0C6007E19AA /* ExtensionNotificationCenter.swift in Sources */,
 				113E580428CA1A380002AA9D /* MainView.swift in Sources */,
-				11EC9CC628D091AB003A6DD0 /* UserDefaultManager.swift in Sources */,
 				113E580628CA1B180002AA9D /* SplashView.swift in Sources */,
 				113E580028C9EBEC0002AA9D /* ActivityIndicator.swift in Sources */,
 				113E57F128C9E4840002AA9D /* CNLoginApp.swift in Sources */,
 				11EC9CC428D08441003A6DD0 /* AlertManager.swift in Sources */,
 				11EC9CC228D081E8003A6DD0 /* LoginManager.swift in Sources */,
+				1108A56928D0B0AF007E19AA /* ExtensionUserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

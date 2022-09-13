@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+// MARK: 彈窗經理
 class AlertManager: ObservableObject {
   
   @Published var isShow: Bool = false
