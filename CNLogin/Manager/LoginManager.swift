@@ -187,7 +187,7 @@ extension LoginManager {
     guard GIDSignIn.sharedInstance.hasPreviousSignIn() else {return}
     GIDSignIn.sharedInstance.restorePreviousSignIn { user, err in
       if let err = err {
-        alert(err.localizedDescription)
+        print(err.localizedDescription)
         return
       }
       
@@ -221,7 +221,7 @@ extension LoginManager {
     
     GIDSignIn.sharedInstance.signIn(with: configuration, presenting: rootViewController) { user, err in
       if let err = err {
-        alert(err.localizedDescription)
+        print(err.localizedDescription)
         return
       }
       
