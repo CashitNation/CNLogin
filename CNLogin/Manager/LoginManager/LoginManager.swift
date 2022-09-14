@@ -12,6 +12,7 @@ class LoginManager: ObservableObject {
   
   enum LoginType: String {
     case mail = "mail"
+    case facebook = "facebook"
     case google = "google"
     case apple = "apple"
     case guest = "guest"
@@ -26,6 +27,12 @@ class LoginManager: ObservableObject {
   @Published var loginType: LoginType = LoginType(rawValue: UserDefaults.get(forKey: .loginTypeKey) as? String ?? "guest") ?? .guest
   
   static let shared = LoginManager()
+  
+  private init() {}
+  
+  private lazy var facebookHelper: FBLoginHelper = {
+    return FBLoginHelper()
+  }()
   
   private lazy var googleHelper: GoogleLoginHelper = {
     return GoogleLoginHelper()
@@ -63,6 +70,7 @@ class LoginManager: ObservableObject {
   func logout() {
     
     googleHelper.googleLogout()
+    facebookHelper.facebookLogout()
     
     do {
       try Auth.auth().signOut()
@@ -90,6 +98,14 @@ class LoginManager: ObservableObject {
       switch LoginManager.shared.loginType {
       case .mail:
         LoginManager.shared.mailLogin { err in
+          if let err = err {
+            print(err.description)
+            LoginManager.shared.isLogin = false
+            return
+          }
+        }
+      case .facebook:
+        facebookHelper.facebookLogin { err in
           if let err = err {
             print(err.description)
             LoginManager.shared.isLogin = false
@@ -150,6 +166,10 @@ class LoginManager: ObservableObject {
   
   func appleLogin() {
     appleHelper.appleLogin()
+  }
+  
+  func facebookLogin(alert: @escaping ((_ err: String?)->Void)) {
+    facebookHelper.facebookLogin(alert: alert)
   }
   
   /// 執行註冊帳號 成功並帶登入

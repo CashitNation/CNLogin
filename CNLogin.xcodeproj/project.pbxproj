@@ -33,6 +33,12 @@
 		1197F01A28D079D1002A9223 /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01928D079D1002A9223 /* FirebaseRemoteConfigSwift */; };
 		1197F01C28D079D1002A9223 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01B28D079D1002A9223 /* FirebaseStorage */; };
 		1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01D28D079D1002A9223 /* FirebaseStorageCombine-Community */; };
+		11D1165728D1C42E002DB212 /* FacebookAEM in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165628D1C42E002DB212 /* FacebookAEM */; };
+		11D1165928D1C42E002DB212 /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165828D1C42E002DB212 /* FacebookBasics */; };
+		11D1165B28D1C42E002DB212 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165A28D1C42E002DB212 /* FacebookCore */; };
+		11D1165D28D1C42E002DB212 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165C28D1C42E002DB212 /* FacebookLogin */; };
+		11D1165F28D1C42E002DB212 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165E28D1C42E002DB212 /* FacebookShare */; };
+		11D1166128D1C501002DB212 /* FBLoginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1166028D1C501002DB212 /* FBLoginHelper.swift */; };
 		11E52A3E28D1AE61004A1303 /* AppleLoginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */; };
 		11E52A4028D1AE6C004A1303 /* GoogleLoginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */; };
 		11EC9CC228D081E8003A6DD0 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC128D081E8003A6DD0 /* LoginManager.swift */; };
@@ -57,6 +63,7 @@
 		113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		113E580328CA1A380002AA9D /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		113E580528CA1B180002AA9D /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		11D1166028D1C501002DB212 /* FBLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBLoginHelper.swift; sourceTree = "<group>"; };
 		11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginHelper.swift; sourceTree = "<group>"; };
 		11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginHelper.swift; sourceTree = "<group>"; };
 		11EC9CC128D081E8003A6DD0 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
@@ -71,20 +78,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11D1165728D1C42E002DB212 /* FacebookAEM in Frameworks */,
+				11D1165928D1C42E002DB212 /* FacebookBasics in Frameworks */,
 				1108A57428D0BF20007E19AA /* GoogleSignInSwift in Frameworks */,
 				1197F00E28D079D1002A9223 /* FirebaseDatabaseSwift in Frameworks */,
 				1197F01428D079D1002A9223 /* FirebaseFirestoreCombine-Community in Frameworks */,
+				11D1165D28D1C42E002DB212 /* FacebookLogin in Frameworks */,
 				1197F00A28D079D1002A9223 /* FirebaseCrashlytics in Frameworks */,
 				1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */,
 				1197F00628D079D1002A9223 /* FirebaseAuth in Frameworks */,
 				1197F00C28D079D1002A9223 /* FirebaseDatabase in Frameworks */,
 				11F4FD6F28D175C600C7B43E /* Crypto in Frameworks */,
 				1197F01C28D079D1002A9223 /* FirebaseStorage in Frameworks */,
+				11D1165B28D1C42E002DB212 /* FacebookCore in Frameworks */,
 				11F4FD7428D1817500C7B43E /* KeychainAccess in Frameworks */,
 				1197F01A28D079D1002A9223 /* FirebaseRemoteConfigSwift in Frameworks */,
 				1197F00828D079D1002A9223 /* FirebaseAuthCombine-Community in Frameworks */,
 				1197F01028D079D1002A9223 /* FirebaseDynamicLinks in Frameworks */,
 				1197F01228D079D1002A9223 /* FirebaseFirestore in Frameworks */,
+				11D1165F28D1C42E002DB212 /* FacebookShare in Frameworks */,
 				1197F01628D079D1002A9223 /* FirebaseFirestoreSwift in Frameworks */,
 				1197F01828D079D1002A9223 /* FirebaseRemoteConfig in Frameworks */,
 				1108A57228D0BF20007E19AA /* GoogleSignIn in Frameworks */,
@@ -180,6 +192,7 @@
 			children = (
 				11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */,
 				11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */,
+				11D1166028D1C501002DB212 /* FBLoginHelper.swift */,
 			);
 			path = ThirdPartHelpers;
 			sourceTree = "<group>";
@@ -218,6 +231,11 @@
 				1108A57328D0BF20007E19AA /* GoogleSignInSwift */,
 				11F4FD6E28D175C600C7B43E /* Crypto */,
 				11F4FD7328D1817500C7B43E /* KeychainAccess */,
+				11D1165628D1C42E002DB212 /* FacebookAEM */,
+				11D1165828D1C42E002DB212 /* FacebookBasics */,
+				11D1165A28D1C42E002DB212 /* FacebookCore */,
+				11D1165C28D1C42E002DB212 /* FacebookLogin */,
+				11D1165E28D1C42E002DB212 /* FacebookShare */,
 			);
 			productName = CNLogin;
 			productReference = 113E57ED28C9E4840002AA9D /* CNLogin.app */;
@@ -252,6 +270,7 @@
 				1108A57028D0BF20007E19AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				11F4FD6D28D175C600C7B43E /* XCRemoteSwiftPackageReference "swift-crypto" */,
 				11F4FD7228D1817500C7B43E /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 113E57EE28C9E4840002AA9D /* Products */;
 			projectDirPath = "";
@@ -281,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				113E57F328C9E4840002AA9D /* CNLoginPageView.swift in Sources */,
+				11D1166128D1C501002DB212 /* FBLoginHelper.swift in Sources */,
 				1108A57A28D0D0FC007E19AA /* ExtensionView .swift in Sources */,
 				1108A56B28D0B0C6007E19AA /* ExtensionNotificationCenter.swift in Sources */,
 				113E580428CA1A380002AA9D /* MainView.swift in Sources */,
@@ -518,6 +538,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.0.0;
+			};
+		};
 		11F4FD6D28D175C600C7B43E /* XCRemoteSwiftPackageReference "swift-crypto" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-crypto.git";
@@ -611,6 +639,31 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1197F00428D079D1002A9223 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
+		};
+		11D1165628D1C42E002DB212 /* FacebookAEM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookAEM;
+		};
+		11D1165828D1C42E002DB212 /* FacebookBasics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookBasics;
+		};
+		11D1165A28D1C42E002DB212 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		11D1165C28D1C42E002DB212 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+		11D1165E28D1C42E002DB212 /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookShare;
 		};
 		11F4FD6E28D175C600C7B43E /* Crypto */ = {
 			isa = XCSwiftPackageProductDependency;

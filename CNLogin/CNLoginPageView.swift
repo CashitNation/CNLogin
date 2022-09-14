@@ -580,7 +580,13 @@ struct ThirdPartyLogin: View {
     HStack(alignment: .center, spacing: 32) {
       
       Button {
-        print("FB Login")
+        loginManager.facebookLogin { err in
+          if let err = err {
+            alertManager.show(title: "Error", msg: err)
+          }else {
+            print("FacebookLogin Success")
+          }
+        }
       } label: {
         iconImage(url: fbIcon)
       }

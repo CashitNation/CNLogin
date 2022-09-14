@@ -81,10 +81,6 @@ class GoogleLoginHelper: NSObject {
     }
   }
   
-  private func successHandler() {
-    
-  }
-  
   func googleLogout() {
       GIDSignIn.sharedInstance.signOut()
   }
