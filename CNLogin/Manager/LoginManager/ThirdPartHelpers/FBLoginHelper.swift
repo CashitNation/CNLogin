@@ -34,8 +34,6 @@ class FBLoginHelper: NSObject {
     loginAndRequestPermissions(mode: .normal) { [weak self] in
       guard let self = self else {return}
       self.loginFBSuccess(alert: alert)
-    } cancelHandler: {
-      print("Cancel Facebook Login")
     } errorHandler: { error in
       alert(error.localizedDescription)
     }
@@ -43,7 +41,6 @@ class FBLoginHelper: NSObject {
   
   private func loginAndRequestPermissions(mode: FBLoginMode,
                                           successHandler: @escaping () -> Void,
-                                          cancelHandler: (()->Void)?,
                                           errorHandler: ((Error)->Void)?) {
     
     fbLoginManager.logIn(permissions: mode.permissions, from: nil) { result, error  in
@@ -52,12 +49,13 @@ class FBLoginHelper: NSObject {
         return
       }
       
-      if let result = result {
-        if result.isCancelled {
-          cancelHandler?()
-        }else {
+      if let _ = result {
+//        result.token
+//        if result.isCancelled {
+//            print("Cancel Facebook Login")
+//        }else {
           successHandler()
-        }
+//        }
       }
     }
   }
@@ -65,7 +63,7 @@ class FBLoginHelper: NSObject {
   private func loginFBSuccess(alert: @escaping ((_ err: String?)->Void)) {
     guard AccessToken.current?.hasGranted(.email) == true else {
       // 沒有權限
-      alert("You don't have permission, please try again")
+      print("You don't have permission, please try again")
       return
     }
     let parameters = ["fields" : "id,name,email,gender,birthday,picture.type(large)"]
@@ -107,6 +105,12 @@ class FBLoginHelper: NSObject {
         alert("Empty FB Token")
         return
       }
+      
+      Profile.loadCurrentProfile { profile, error in
+        guard let profile = profile else { return }
+        print("\(profile.userID)\n\(profile.name ?? "")\n\(profile.email ?? "")\n\(String(describing: profile.imageURL(forMode: .square, size: CGSize(width: 300, height: 300))))")
+      }
+      
       let credential = FacebookAuthProvider.credential(withAccessToken: current.tokenString)
       
       Auth.auth().signIn(with: credential) { authResult, err in
