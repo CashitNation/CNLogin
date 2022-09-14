@@ -22,7 +22,7 @@ struct CNLoginPageView_Previews: PreviewProvider {
 struct CNLoginPageView: View {
   
   // 當前頁面 登入/註冊 狀態
-  @State var signMode: SignModeSwitch.SignMode = .login
+  @State private var signMode: SignModeSwitch.SignMode = .login
   
   var body: some View {
     ZStack {
@@ -157,7 +157,7 @@ struct CNLoginView: View {
   @StateObject private var alertManager = AlertManager()
   
   // 使否顯示密碼
-  @State var visible = false
+  @State private var visible = false
   
   private enum Field: Int, Hashable {
     case mail, pass
@@ -556,8 +556,6 @@ struct ForgetPassword: View {
       Text(alertManager.message)
     }
     
-    
-    
   }
   
 }
@@ -579,47 +577,38 @@ struct ThirdPartyLogin: View {
   
   var body: some View {
     
-    VStack {
-      HStack(alignment: .center, spacing: 32) {
-        
-        Button {
-          print("Google Login")
-          loginManager.googleHelper.googleLogin { err in
-            if let err = err {
-              alertManager.show(title: "Error", msg: err)
-            }else {
-              print("GoogleLogin Success")
-            }
-          }
-        } label: {
-          iconImage(url: googleIcon)
-        }
-        .frame(width: iconWidth, height: iconWidth, alignment: .center)
-        
-        Button {
-          print("FB Login")
-        } label: {
-          iconImage(url: fbIcon)
-        }
-        .frame(width: iconWidth, height: iconWidth, alignment: .center)
-        
-        
-      }
-      .padding(10)
+    HStack(alignment: .center, spacing: 32) {
       
       Button {
-        loginManager.appleHelper.appleLogin()
+        print("FB Login")
+      } label: {
+        iconImage(url: fbIcon)
+      }
+      .frame(width: iconWidth, height: iconWidth, alignment: .center)
+      
+      Button {
+        loginManager.googleLogin { err in
+          if let err = err {
+            alertManager.show(title: "Error", msg: err)
+          }else {
+            print("GoogleLogin Success")
+          }
+        }
+      } label: {
+        iconImage(url: googleIcon)
+      }
+      .frame(width: iconWidth, height: iconWidth, alignment: .center)
+      
+      Button {
+        loginManager.appleLogin()
         
       } label: {
-        SignInWithAppleButton()
-          .padding(10)
-          .aspectRatio(contentMode: .fit)
-          .cornerRadius(32)
-          .shadow(radius: 8)
+        iconImage(url: appleIcon)
       }
-      .frame(height: iconWidth * 1.5, alignment: .center)
+      .frame(width: iconWidth, height: iconWidth, alignment: .center)
       
     }
+    .padding(10)
     .alert(alertManager.title, isPresented: $alertManager.isShow) {
       Button("Ok", role: .cancel) {
         alertManager.close()
@@ -634,7 +623,7 @@ struct ThirdPartyLogin: View {
   }
   
   private func setAppleLoginDidComplete() {
-    loginManager.appleHelper.didComplete = { err in
+    loginManager.didAppleLoginComplete = { err in
       if let err = err {
         alertManager.show(title: "Error", msg: err)
       }else {

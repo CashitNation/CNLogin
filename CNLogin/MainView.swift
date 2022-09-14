@@ -30,7 +30,7 @@ struct MainView: View {
             }
             .padding()
 
-          Text("\(loginManager.getEmail())")
+          Text("\(loginManager.getEmail() ?? "Email Empty")")
         }
       
     }

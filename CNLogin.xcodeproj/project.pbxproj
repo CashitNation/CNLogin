@@ -33,6 +33,8 @@
 		1197F01A28D079D1002A9223 /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01928D079D1002A9223 /* FirebaseRemoteConfigSwift */; };
 		1197F01C28D079D1002A9223 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01B28D079D1002A9223 /* FirebaseStorage */; };
 		1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01D28D079D1002A9223 /* FirebaseStorageCombine-Community */; };
+		11E52A3E28D1AE61004A1303 /* AppleLoginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */; };
+		11E52A4028D1AE6C004A1303 /* GoogleLoginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */; };
 		11EC9CC228D081E8003A6DD0 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC128D081E8003A6DD0 /* LoginManager.swift */; };
 		11EC9CC428D08441003A6DD0 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC328D08441003A6DD0 /* AlertManager.swift */; };
 		11F4FD6F28D175C600C7B43E /* Crypto in Frameworks */ = {isa = PBXBuildFile; productRef = 11F4FD6E28D175C600C7B43E /* Crypto */; };
@@ -55,6 +57,8 @@
 		113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		113E580328CA1A380002AA9D /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		113E580528CA1B180002AA9D /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginHelper.swift; sourceTree = "<group>"; };
+		11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginHelper.swift; sourceTree = "<group>"; };
 		11EC9CC128D081E8003A6DD0 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		11EC9CC328D08441003A6DD0 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		11F4FD6C28D1656200C7B43E /* CNLogin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CNLogin.entitlements; sourceTree = "<group>"; };
@@ -104,7 +108,7 @@
 		1108A56D28D0B106007E19AA /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				11EC9CC128D081E8003A6DD0 /* LoginManager.swift */,
+				11E52A3B28D1AE26004A1303 /* LoginManager */,
 				11EC9CC328D08441003A6DD0 /* AlertManager.swift */,
 				11F4FD7528D181C600C7B43E /* KeychainHelper.swift */,
 			);
@@ -160,6 +164,24 @@
 				113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		11E52A3B28D1AE26004A1303 /* LoginManager */ = {
+			isa = PBXGroup;
+			children = (
+				11EC9CC128D081E8003A6DD0 /* LoginManager.swift */,
+				11E52A3C28D1AE3D004A1303 /* ThirdPartHelpers */,
+			);
+			path = LoginManager;
+			sourceTree = "<group>";
+		};
+		11E52A3C28D1AE3D004A1303 /* ThirdPartHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */,
+				11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */,
+			);
+			path = ThirdPartHelpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,9 +284,11 @@
 				1108A57A28D0D0FC007E19AA /* ExtensionView .swift in Sources */,
 				1108A56B28D0B0C6007E19AA /* ExtensionNotificationCenter.swift in Sources */,
 				113E580428CA1A380002AA9D /* MainView.swift in Sources */,
+				11E52A3E28D1AE61004A1303 /* AppleLoginHelper.swift in Sources */,
 				113E580628CA1B180002AA9D /* SplashView.swift in Sources */,
 				113E580028C9EBEC0002AA9D /* ActivityIndicator.swift in Sources */,
 				113E57F128C9E4840002AA9D /* CNLoginApp.swift in Sources */,
+				11E52A4028D1AE6C004A1303 /* GoogleLoginHelper.swift in Sources */,
 				11F4FD7628D181C600C7B43E /* KeychainHelper.swift in Sources */,
 				11F4FD7128D17B5C00C7B43E /* ExtensionString.swift in Sources */,
 				11EC9CC428D08441003A6DD0 /* AlertManager.swift in Sources */,
