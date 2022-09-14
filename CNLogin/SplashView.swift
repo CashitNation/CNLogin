@@ -11,8 +11,6 @@ struct SplashView: View {
   
   @StateObject private var loginManager = LoginManager.shared
   
-  
-  
   var body: some View {
     
     NavigationView {
@@ -31,9 +29,7 @@ struct SplashView: View {
       .onAppear {
         
         loginManager.addObserverLogin()
-        loginManager.autoLogin { isSuccess in
-          loginManager.isLogin = isSuccess
-        }
+        loginManager.autoLogin()
         
       }
     }

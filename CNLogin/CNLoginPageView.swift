@@ -283,7 +283,7 @@ struct CNLoginView: View {
   
   /// 觸發登入按鈕
   private func didTapLogin() {
-    loginManager.login { err in
+    loginManager.mailLogin { err in
       if let err = err {
         alertManager.show(title: "Error", msg: err)
       }else {
@@ -500,7 +500,7 @@ struct CNSignUpView: View {
   
   // 觸發立即登入
   private func didTapLogin() {
-    loginManager.login { err in
+    loginManager.mailLogin { err in
       if let err = err {
         alertManager.show(title: "Error", msg: err)
       }else {
@@ -578,35 +578,46 @@ struct ThirdPartyLogin: View {
   private let iconWidth: CGFloat = 54
   
   var body: some View {
-    HStack(alignment: .center, spacing: 32) {
-      
-      Button {
-        print("FB Login")
-      } label: {
-        iconImage(url: fbIcon)
-      }
-      .frame(width: iconWidth, height: iconWidth, alignment: .center)
-      
-      Button {
-        print("Google Login")
-        loginManager.googleLogin { err in
-          if let err = err {
-            alertManager.show(title: "Error", msg: err)
-          }else {
-            print("GoogleLogin Success")
+    
+    VStack {
+      HStack(alignment: .center, spacing: 32) {
+        
+        Button {
+          print("Google Login")
+          loginManager.googleHelper.googleLogin { err in
+            if let err = err {
+              alertManager.show(title: "Error", msg: err)
+            }else {
+              print("GoogleLogin Success")
+            }
           }
+        } label: {
+          iconImage(url: googleIcon)
         }
-      } label: {
-        iconImage(url: googleIcon)
+        .frame(width: iconWidth, height: iconWidth, alignment: .center)
+        
+        Button {
+          print("FB Login")
+        } label: {
+          iconImage(url: fbIcon)
+        }
+        .frame(width: iconWidth, height: iconWidth, alignment: .center)
+        
+        
       }
-      .frame(width: iconWidth, height: iconWidth, alignment: .center)
+      .padding(10)
       
       Button {
-        print("Apple Login")
+        loginManager.appleHelper.appleLogin()
+        
       } label: {
-        iconImage(url: appleIcon)
+        SignInWithAppleButton()
+          .padding(10)
+          .aspectRatio(contentMode: .fit)
+          .cornerRadius(32)
+          .shadow(radius: 8)
       }
-      .frame(width: iconWidth, height: iconWidth, alignment: .center)
+      .frame(height: iconWidth * 1.5, alignment: .center)
       
     }
     .alert(alertManager.title, isPresented: $alertManager.isShow) {
@@ -616,8 +627,20 @@ struct ThirdPartyLogin: View {
     } message: {
       Text(alertManager.message)
     }
+    .onAppear {
+      setAppleLoginDidComplete()
+    }
     
-    
+  }
+  
+  private func setAppleLoginDidComplete() {
+    loginManager.appleHelper.didComplete = { err in
+      if let err = err {
+        alertManager.show(title: "Error", msg: err)
+      }else {
+        print("Apple Login Success")
+      }
+    }
   }
   
   private func iconImage(url: String) -> AnyView {

@@ -35,6 +35,10 @@
 		1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01D28D079D1002A9223 /* FirebaseStorageCombine-Community */; };
 		11EC9CC228D081E8003A6DD0 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC128D081E8003A6DD0 /* LoginManager.swift */; };
 		11EC9CC428D08441003A6DD0 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EC9CC328D08441003A6DD0 /* AlertManager.swift */; };
+		11F4FD6F28D175C600C7B43E /* Crypto in Frameworks */ = {isa = PBXBuildFile; productRef = 11F4FD6E28D175C600C7B43E /* Crypto */; };
+		11F4FD7128D17B5C00C7B43E /* ExtensionString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F4FD7028D17B5C00C7B43E /* ExtensionString.swift */; };
+		11F4FD7428D1817500C7B43E /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 11F4FD7328D1817500C7B43E /* KeychainAccess */; };
+		11F4FD7628D181C600C7B43E /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F4FD7528D181C600C7B43E /* KeychainHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +57,9 @@
 		113E580528CA1B180002AA9D /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		11EC9CC128D081E8003A6DD0 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		11EC9CC328D08441003A6DD0 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		11F4FD6C28D1656200C7B43E /* CNLogin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CNLogin.entitlements; sourceTree = "<group>"; };
+		11F4FD7028D17B5C00C7B43E /* ExtensionString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionString.swift; sourceTree = "<group>"; };
+		11F4FD7528D181C600C7B43E /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +74,9 @@
 				1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */,
 				1197F00628D079D1002A9223 /* FirebaseAuth in Frameworks */,
 				1197F00C28D079D1002A9223 /* FirebaseDatabase in Frameworks */,
+				11F4FD6F28D175C600C7B43E /* Crypto in Frameworks */,
 				1197F01C28D079D1002A9223 /* FirebaseStorage in Frameworks */,
+				11F4FD7428D1817500C7B43E /* KeychainAccess in Frameworks */,
 				1197F01A28D079D1002A9223 /* FirebaseRemoteConfigSwift in Frameworks */,
 				1197F00828D079D1002A9223 /* FirebaseAuthCombine-Community in Frameworks */,
 				1197F01028D079D1002A9223 /* FirebaseDynamicLinks in Frameworks */,
@@ -87,6 +96,7 @@
 				1108A56A28D0B0C6007E19AA /* ExtensionNotificationCenter.swift */,
 				1108A56828D0B0AF007E19AA /* ExtensionUserDefaults.swift */,
 				1108A57928D0D0FC007E19AA /* ExtensionView .swift */,
+				11F4FD7028D17B5C00C7B43E /* ExtensionString.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -96,6 +106,7 @@
 			children = (
 				11EC9CC128D081E8003A6DD0 /* LoginManager.swift */,
 				11EC9CC328D08441003A6DD0 /* AlertManager.swift */,
+				11F4FD7528D181C600C7B43E /* KeychainHelper.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -119,6 +130,7 @@
 		113E57EF28C9E4840002AA9D /* CNLogin */ = {
 			isa = PBXGroup;
 			children = (
+				11F4FD6C28D1656200C7B43E /* CNLogin.entitlements */,
 				1108A57528D0BF3F007E19AA /* Info.plist */,
 				113E57F028C9E4840002AA9D /* CNLoginApp.swift */,
 				113E580528CA1B180002AA9D /* SplashView.swift */,
@@ -182,6 +194,8 @@
 				1197F01D28D079D1002A9223 /* FirebaseStorageCombine-Community */,
 				1108A57128D0BF20007E19AA /* GoogleSignIn */,
 				1108A57328D0BF20007E19AA /* GoogleSignInSwift */,
+				11F4FD6E28D175C600C7B43E /* Crypto */,
+				11F4FD7328D1817500C7B43E /* KeychainAccess */,
 			);
 			productName = CNLogin;
 			productReference = 113E57ED28C9E4840002AA9D /* CNLogin.app */;
@@ -214,6 +228,8 @@
 			packageReferences = (
 				1197F00428D079D1002A9223 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1108A57028D0BF20007E19AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				11F4FD6D28D175C600C7B43E /* XCRemoteSwiftPackageReference "swift-crypto" */,
+				11F4FD7228D1817500C7B43E /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = 113E57EE28C9E4840002AA9D /* Products */;
 			projectDirPath = "";
@@ -249,6 +265,8 @@
 				113E580628CA1B180002AA9D /* SplashView.swift in Sources */,
 				113E580028C9EBEC0002AA9D /* ActivityIndicator.swift in Sources */,
 				113E57F128C9E4840002AA9D /* CNLoginApp.swift in Sources */,
+				11F4FD7628D181C600C7B43E /* KeychainHelper.swift in Sources */,
+				11F4FD7128D17B5C00C7B43E /* ExtensionString.swift in Sources */,
 				11EC9CC428D08441003A6DD0 /* AlertManager.swift in Sources */,
 				11EC9CC228D081E8003A6DD0 /* LoginManager.swift in Sources */,
 				1108A56928D0B0AF007E19AA /* ExtensionUserDefaults.swift in Sources */,
@@ -377,6 +395,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CNLogin/CNLogin.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0.0.2022091301;
 				DEVELOPMENT_ASSET_PATHS = "\"CNLogin/Preview Content\"";
@@ -408,6 +427,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CNLogin/CNLogin.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0.0.2022091301;
 				DEVELOPMENT_ASSET_PATHS = "\"CNLogin/Preview Content\"";
@@ -472,6 +492,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 9.0.0;
+			};
+		};
+		11F4FD6D28D175C600C7B43E /* XCRemoteSwiftPackageReference "swift-crypto" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-crypto.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		11F4FD7228D1817500C7B43E /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -551,6 +587,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1197F00428D079D1002A9223 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
+		};
+		11F4FD6E28D175C600C7B43E /* Crypto */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11F4FD6D28D175C600C7B43E /* XCRemoteSwiftPackageReference "swift-crypto" */;
+			productName = Crypto;
+		};
+		11F4FD7328D1817500C7B43E /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11F4FD7228D1817500C7B43E /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

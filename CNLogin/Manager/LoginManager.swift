@@ -8,12 +8,14 @@
 import SwiftUI
 import Firebase
 import GoogleSignIn
+import AuthenticationServices
 
 class LoginManager: ObservableObject {
   
   enum LoginType: String {
     case mail = "mail"
     case google = "google"
+    case apple = "apple"
     case guest = "guest"
   }
   
@@ -29,12 +31,22 @@ class LoginManager: ObservableObject {
   
   static let shared = LoginManager()
   
+  lazy var googleHelper: GoogleLoginHelper = {
+      return GoogleLoginHelper()
+  }()
+  
+  lazy var appleHelper: AppleLoginHelper = {
+      return AppleLoginHelper()
+  }()
+  
   func getEmail() -> String {
     switch loginType {
     case .mail:
       return inputMail
     case .google:
       return googleProfile?.email ?? "Google Email Empty"
+    case .apple:
+      return "Apple Email Empty"
     case .guest:
       return "Email Empty"
     }
@@ -49,16 +61,13 @@ class LoginManager: ObservableObject {
   
   /// 通知目前為登入成功狀態
   func notifyLoginSuccess(type: LoginType) {
-    if type == .mail {
-      
-      UserDefaults.set(LoginManager.shared.inputMail, forKey: .rememberMailKey)
-      UserDefaults.set(LoginManager.shared.inputPass, forKey: .rememberPassKey)
-      
+    print("@@ LoginSuccess by \(type.rawValue)")
+    DispatchQueue.main.async {
+      LoginManager.shared.isLogin = true
+      LoginManager.shared.loginType = type
+      UserDefaults.set(type.rawValue, forKey: .loginTypeKey)
+      NotificationCenter.post(forKey: .isLoginKey)
     }
-    UserDefaults.set(type.rawValue, forKey: .loginTypeKey)
-    NotificationCenter.post(forKey: .isLoginKey)
-    LoginManager.shared.isLogin = true
-    LoginManager.shared.loginType = type
   }
   
   /// 執行登出
@@ -69,9 +78,8 @@ class LoginManager: ObservableObject {
       try Auth.auth().signOut()
       LoginManager.shared.isLogin = false
       LoginManager.shared.googleProfile = nil
-      UserDefaults.remove(forKey: .rememberMailKey)
-      UserDefaults.remove(forKey: .rememberPassKey)
       UserDefaults.remove(forKey: .loginTypeKey)
+      UserDefaults.remove(forKey: .appleUserIdKey)
       NotificationCenter.post(forKey: .isLoginKey)
     } catch {
       print(error.localizedDescription)
@@ -85,8 +93,48 @@ class LoginManager: ObservableObject {
     }
   }
   
-  /// 執行確認登入
-  func login(alert: @escaping ((_ err: String?)->Void)) {
+  /// 執行自動登入
+  func autoLogin() {
+    
+    if let user = Auth.auth().currentUser {
+      print("@@ \(user.uid) \(user.displayName ?? "無") auto login with \(LoginManager.shared.loginType)")
+      switch LoginManager.shared.loginType {
+      case .mail:
+        LoginManager.shared.mailLogin { err in
+          if let err = err {
+            print(err.description)
+            LoginManager.shared.isLogin = false
+            return
+          }
+        }
+      case .google:
+        googleHelper.googleAutoLogin { err in
+          if let err = err {
+            print(err.description)
+            LoginManager.shared.isLogin = false
+            return
+          }
+        }
+      case .apple:
+        appleHelper.appleAutoLogin { err in
+          if let err = err {
+            print(err.description)
+            LoginManager.shared.isLogin = false
+            return
+          }
+        }
+      case .guest:
+        break
+      }
+    } else {
+        print("@@ not auto login")
+      LoginManager.shared.isLogin = false
+    }
+    
+  }
+  
+  /// 執行信箱登入
+  func mailLogin(alert: @escaping ((_ err: String?)->Void)) {
     
     guard inputMail != "" && inputPass != "" else {
       alert("Please fill all the contents properly")
@@ -97,37 +145,12 @@ class LoginManager: ObservableObject {
         alert(err.localizedDescription)
         return
       }
+      UserDefaults.set(LoginManager.shared.inputMail, forKey: .rememberMailKey)
+      UserDefaults.set(LoginManager.shared.inputPass, forKey: .rememberPassKey)
       // 成功登入
       LoginManager.shared.notifyLoginSuccess(type: .mail)
       alert(nil)
     }
-  }
-  
-  /// 執行自動登入
-  func autoLogin(callback: ((_ isSuccess: Bool)->Void)? = nil) {
-    
-    LoginManager.shared.googleAutoLogin { err in
-      if let err = err {
-        print("\(err) try to login by email")
-        
-        LoginManager.shared.login { err in
-          if let err = err {
-            print(err)
-            callback?(false)
-          }else {
-            print("AutoLogin Success")
-            callback?(true)
-          }
-          return
-        }
-        
-      }else {
-        print("Google AutoLogin Success")
-        callback?(true)
-      }
-      return
-    }
-    
   }
   
   /// 執行註冊帳號 成功並帶登入
@@ -181,10 +204,15 @@ class LoginManager: ObservableObject {
   
 }
 
-extension LoginManager {
+class GoogleLoginHelper: NSObject {
   
   func googleAutoLogin(alert: @escaping ((_ err: String?)->Void)) {
-    guard GIDSignIn.sharedInstance.hasPreviousSignIn() else {return}
+    
+    guard GIDSignIn.sharedInstance.hasPreviousSignIn() else {
+      alert("hasNotPreviousSignIn")
+      return
+    }
+    
     GIDSignIn.sharedInstance.restorePreviousSignIn { user, err in
       if let err = err {
         print(err.localizedDescription)
@@ -230,11 +258,12 @@ extension LoginManager {
       
       let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
       
-      Auth.auth().signIn(with: credential) { (_, err) in
+      Auth.auth().signIn(with: credential) { authResult, err in
         if let err = err {
           alert(err.localizedDescription)
           return
         }
+        
         LoginManager.shared.googleProfile = user?.profile
         LoginManager.shared.notifyLoginSuccess(type: .google)
         alert(nil)
@@ -242,5 +271,110 @@ extension LoginManager {
       }
     }
   }
+  
+}
+
+class AppleLoginHelper: NSObject {
+  
+  private lazy var keychainHelper: KeychainHelper = {
+      return KeychainHelper()
+  }()
+  
+  private var currentNonce: String?
+  
+  var didComplete: ((_ err: String?)->Void)? = nil
+  
+  func appleLogin() {
+    let provider = ASAuthorizationAppleIDProvider()
+    let request = provider.createRequest()
+    let nonce = String.randomNonceString()
+    currentNonce = nonce
+    request.requestedScopes = [.email, .fullName]
+    request.nonce = nonce.sha256()
+    
+    let controller = ASAuthorizationController(authorizationRequests: [request])
+    controller.delegate = self
+    controller.presentationContextProvider = self
+    controller.performRequests()
+  }
+  
+  func appleAutoLogin(alert: @escaping ((_ err: String?)->Void)) {
+    
+    let userId = UserDefaults.get(forKey: .appleUserIdKey) as? String ?? ""
+    let appleIDProvider = ASAuthorizationAppleIDProvider()
+    
+    appleIDProvider.getCredentialState(forUserID: userId) { (credentialState, error) in
+      switch credentialState {
+      case .authorized:
+        print("Auto login successful")
+        LoginManager.shared.notifyLoginSuccess(type: .apple)
+        alert(nil)
+        break
+      case .revoked, .notFound:
+        alert("apple Auto login not successful")
+        break
+      default:
+        alert("Unknow Error apple Auto login not successful")
+        break
+      }
+    }
+  }
+  
+}
+
+extension AppleLoginHelper: ASAuthorizationControllerDelegate {
+  
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    
+    guard let nonce = currentNonce,
+          let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+          let appleIDToken = appleIDCredential.identityToken,
+          let idTokenString = String(data: appleIDToken, encoding: .utf8) else { return }
+    
+    
+    let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                              idToken: idTokenString,
+                                              rawNonce: nonce)
+    
+    Auth.auth().signIn(with: credential) { authResult, err in
+      if let err = err {
+        self.didComplete?(err.localizedDescription)
+        return
+      }
+      
+      UserDefaults.set(appleIDCredential.user, forKey: .appleUserIdKey)
+      LoginManager.shared.notifyLoginSuccess(type: .apple)
+      self.didComplete?(nil)
+      
+    }
+  }
+  
+  /// Apple登入失敗
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+    print("Apple登入失敗： \(error.localizedDescription)")
+  }
+  
+}
+
+extension AppleLoginHelper: ASAuthorizationControllerPresentationContextProviding {
+  
+  func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+    let scenes = UIApplication.shared.connectedScenes
+    let windowScene = scenes.first as? UIWindowScene
+    let window = windowScene?.windows.first
+    return window ?? UIWindow()
+  }
+    
+}
+  
+struct SignInWithAppleButton: UIViewRepresentable {
+  
+  typealias UIViewType = ASAuthorizationAppleIDButton
+  
+  func makeUIView(context: Context) -> ASAuthorizationAppleIDButton {
+    return ASAuthorizationAppleIDButton(type: .signIn, style: .white)
+  }
+  
+  func updateUIView(_ uiView: ASAuthorizationAppleIDButton, context: Context) {}
   
 }

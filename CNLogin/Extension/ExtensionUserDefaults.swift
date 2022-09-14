@@ -16,6 +16,8 @@ extension UserDefaults {
     case rememberPassKey = "rememberPassKey"
     // 登入方式
     case loginTypeKey = "loginTypeKey"
+    // apple登入的userId
+    case appleUserIdKey = "appleUserIdKey"
   }
   
   static func get(forKey key: KeyType) -> Any? {
