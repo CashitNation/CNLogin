@@ -13,7 +13,6 @@ struct SplashView: View {
   
   var body: some View {
     
-    NavigationView {
       ZStack {
         
         if loginManager.isLogin {
@@ -23,16 +22,12 @@ struct SplashView: View {
         }
         
       }
-      .navigationTitle("")
-      .navigationBarHidden(true)
-      .navigationBarBackButtonHidden(true)
       .onAppear {
         
         loginManager.addObserverLogin()
         loginManager.autoLogin()
         
       }
-    }
     
   }
   

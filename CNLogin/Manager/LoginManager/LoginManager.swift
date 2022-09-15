@@ -8,41 +8,60 @@
 import SwiftUI
 import Firebase
 
-class LoginManager: ObservableObject {
+enum LoginType: String {
+  case mail = "mail"
+  case facebook = "facebook"
+  case google = "google"
+  case apple = "apple"
+  case guest = "guest"
   
-  enum LoginType: String {
-    case mail = "mail"
-    case facebook = "facebook"
-    case google = "google"
-    case apple = "apple"
-    case guest = "guest"
+  var iconUrl: String {
+    switch self {
+    case .facebook: return "https://cdn-icons-png.flaticon.com/512/124/124010.png"
+    case .google: return "https://cdn-icons-png.flaticon.com/512/300/300221.png"
+    case .apple: return "https://cdn-icons-png.flaticon.com/512/0/747.png"
+    default: return ""
+    }
   }
+}
+
+class LoginManager: ObservableObject {
   
   @Published var isLogin: Bool = false
   
-  @Published var inputMail = UserDefaults.get(forKey: .rememberMailKey) as? String ?? ""
-  
-  @Published var inputPass = UserDefaults.get(forKey: .rememberPassKey) as? String ?? ""
-  
   @Published var loginType: LoginType = LoginType(rawValue: UserDefaults.get(forKey: .loginTypeKey) as? String ?? "guest") ?? .guest
+  
+  @Published var isSuccessRegister = false
+  
+  lazy var fbHelper = FBLoginHelper()
+  lazy var googleHelper = GoogleLoginHelper()
+  lazy var appleHelper = AppleLoginHelper()
   
   static let shared = LoginManager()
   
-  private init() {}
+  private init() {
+    
+    fbHelper.didLoginComplete = {
+      [weak self] isSuccess, msg in
+      guard let self = self else {return}
+      self.needToShowAlert?(isSuccess ? "Success" : "Error", msg ?? "")
+    }
+    
+    googleHelper.didLoginComplete = {
+      [weak self] isSuccess, msg in
+      guard let self = self else {return}
+      self.needToShowAlert?(isSuccess ? "Success" : "Error", msg ?? "")
+    }
+    
+    appleHelper.didLoginComplete = {
+      [weak self] isSuccess, msg in
+      guard let self = self else {return}
+      self.needToShowAlert?(isSuccess ? "Success" : "Error", msg ?? "")
+    }
+    
+  }
   
-  private lazy var facebookHelper: FBLoginHelper = {
-    return FBLoginHelper()
-  }()
-  
-  private lazy var googleHelper: GoogleLoginHelper = {
-    return GoogleLoginHelper()
-  }()
-  
-  private lazy var appleHelper: AppleLoginHelper = {
-    return AppleLoginHelper()
-  }()
-  
-  lazy var didAppleLoginComplete: ((_ err: String?)->Void)? = appleHelper.didComplete
+  var needToShowAlert: ((_ title: String, _ msg: String)->Void)?
   
   func getEmail() -> String? {
     return Auth.auth().currentUser?.email
@@ -70,7 +89,7 @@ class LoginManager: ObservableObject {
   func logout() {
     
     googleHelper.googleLogout()
-    facebookHelper.facebookLogout()
+    fbHelper.facebookLogout()
     
     do {
       try Auth.auth().signOut()
@@ -93,131 +112,93 @@ class LoginManager: ObservableObject {
   /// 執行自動登入
   func autoLogin() {
     
-    if let user = Auth.auth().currentUser {
-      print("@@ \(user.uid) \(user.displayName ?? "無") auto login with \(LoginManager.shared.loginType)")
-      switch LoginManager.shared.loginType {
-      case .mail:
-        LoginManager.shared.mailLogin { err in
-          if let err = err {
-            print(err.description)
-            LoginManager.shared.isLogin = false
-            return
-          }
-        }
-      case .facebook:
-        facebookHelper.facebookLogin { err in
-          if let err = err {
-            print(err.description)
-            LoginManager.shared.isLogin = false
-            return
-          }
-        }
-      case .google:
-        googleHelper.googleAutoLogin { err in
-          if let err = err {
-            print(err.description)
-            LoginManager.shared.isLogin = false
-            return
-          }
-        }
-      case .apple:
-        appleHelper.appleAutoLogin { err in
-          if let err = err {
-            print(err.description)
-            LoginManager.shared.isLogin = false
-            return
-          }
-        }
-      case .guest:
-        print("@@ not auto login")
-        LoginManager.shared.isLogin = false
-        return
-      }
-    } else {
-      print("@@ not auto login")
-      LoginManager.shared.isLogin = false
+    guard let user = Auth.auth().currentUser else {return}
+    print("@@ \(user.uid) \(user.displayName ?? "無") auto login with \(LoginManager.shared.loginType)")
+    switch LoginManager.shared.loginType {
+    case .mail:
+      let mail = UserDefaults.get(forKey: .rememberMailKey) as? String ?? ""
+      let pass = UserDefaults.get(forKey: .rememberPassKey) as? String ?? ""
+      self.mailLogin(mail: mail, pass: pass)
+    case .facebook:
+      fbHelper.facebookLogin()
+    case .google:
+      googleHelper.googleAutoLogin()
+    case .apple:
+      appleHelper.appleAutoLogin()
+    case .guest:
+      return
     }
     
   }
   
   /// 執行信箱登入
-  func mailLogin(alert: @escaping ((_ err: String?)->Void)) {
+  func mailLogin(mail:String, pass: String) {
     
-    guard inputMail != "" && inputPass != "" else {
-      alert("Please fill all the contents properly")
+    guard mail != "" && pass != "" else {
+      needToShowAlert?("Error", "Please fill all the contents properly")
       return
     }
-    Auth.auth().signIn(withEmail: inputMail, password: inputPass) { (res, err) in
+    Auth.auth().signIn(withEmail: mail, password: pass) {
+      [weak self] res, err in
+      guard let self = self else {return}
+      
       if let err = err {
-        alert(err.localizedDescription)
+        self.needToShowAlert?("Error", err.localizedDescription)
         return
       }
-      UserDefaults.set(LoginManager.shared.inputMail, forKey: .rememberMailKey)
-      UserDefaults.set(LoginManager.shared.inputPass, forKey: .rememberPassKey)
+      UserDefaults.set(mail, forKey: .rememberMailKey)
+      UserDefaults.set(pass, forKey: .rememberPassKey)
       // 成功登入
       LoginManager.shared.notifyLoginSuccess(type: .mail)
-      alert(nil)
     }
-  }
-  
-  func googleLogin(alert: @escaping ((_ err: String?)->Void)) {
-    googleHelper.googleLogin(alert: alert)
-  }
-  
-  func appleLogin() {
-    appleHelper.appleLogin()
-  }
-  
-  func facebookLogin(alert: @escaping ((_ err: String?)->Void)) {
-    facebookHelper.facebookLogin(alert: alert)
   }
   
   /// 執行註冊帳號 成功並帶登入
-  func register(pass: String, repass: String,
-                alert: @escaping ((_ isSuccess: Bool, _ msg: String)->Void)) {
+  func register(mail: String, pass: String, repass: String) {
     
-    guard LoginManager.shared.inputMail != "" && pass != "" && repass != "" else {
-      alert(false, "Please fill all the contents properly")
+    guard mail != "" && pass != "" && repass != "" else {
+      self.needToShowAlert?("Error", "Please fill all the contents properly")
       return
     }
     
     guard pass == repass else {
-      alert(false, "Password mismatch")
+      self.needToShowAlert?("Error", "Password mismatch")
       return
     }
     
-    LoginManager.shared.inputPass = pass
-    
-    Auth.auth().createUser(withEmail: inputMail, password: pass) { (res, err) in
+    Auth.auth().createUser(withEmail: mail, password: pass) {
+      [weak self] res, err in
+      guard let self = self else {return}
       
       if let err = err {
-        alert(false, err.localizedDescription)
+        self.needToShowAlert?("Error", err.localizedDescription)
         return
       }
       
-      UserDefaults.set(LoginManager.shared.inputMail, forKey: .rememberMailKey)
-      UserDefaults.set(LoginManager.shared.inputPass, forKey: .rememberPassKey)
-      
+      UserDefaults.set(mail, forKey: .rememberMailKey)
+      UserDefaults.set(pass, forKey: .rememberPassKey)
+      self.isSuccessRegister = true
       // 成功註冊
-      alert(true, "Register Success Welcome!\nLogin now?")
+      self.needToShowAlert?("Success", "Register Success Welcome!\nLogin now?")
       
     }
   }
   
-  
   /// 執行重新設定密碼 信箱認證
-  func resetPassword(alert: @escaping ((_ title: String, _ msg: String)->Void)) {
-    guard inputMail != "" else {
-      alert("Error", "Email is empty")
+  func resetPassword(mail: String) {
+    guard mail != "" else {
+      self.needToShowAlert?("Error", "Email is empty")
       return
     }
-    Auth.auth().sendPasswordReset(withEmail: inputMail) { (err) in
+    Auth.auth().sendPasswordReset(withEmail: mail) {
+      [weak self] err in
+      guard let self = self else {return}
       if let err = err {
-        alert("Error", err.localizedDescription)
+        self.needToShowAlert?("Error", err.localizedDescription)
         return
       }
       
-      alert("Reset Success", "Password reset link has been sent successfully")
+      self.needToShowAlert?("Reset Success", "Password reset link has been sent successfully")
     }
   }
   

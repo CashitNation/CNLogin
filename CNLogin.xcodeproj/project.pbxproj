@@ -20,6 +20,10 @@
 		113E580028C9EBEC0002AA9D /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */; };
 		113E580428CA1A380002AA9D /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E580328CA1A380002AA9D /* MainView.swift */; };
 		113E580628CA1B180002AA9D /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E580528CA1B180002AA9D /* SplashView.swift */; };
+		11939B2928D326860028F0EF /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11939B2728D326860028F0EF /* BlurEffect.swift */; };
+		11939B2A28D326860028F0EF /* URLImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11939B2828D326860028F0EF /* URLImage.swift */; };
+		11939B2D28D326FC0028F0EF /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 11939B2C28D326FC0028F0EF /* CachedAsyncImage */; };
+		11939B3128D348D40028F0EF /* FieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11939B3028D348D40028F0EF /* FieldViewModel.swift */; };
 		1197F00628D079D1002A9223 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F00528D079D1002A9223 /* FirebaseAuth */; };
 		1197F00828D079D1002A9223 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F00728D079D1002A9223 /* FirebaseAuthCombine-Community */; };
 		1197F00A28D079D1002A9223 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F00928D079D1002A9223 /* FirebaseCrashlytics */; };
@@ -63,6 +67,9 @@
 		113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		113E580328CA1A380002AA9D /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		113E580528CA1B180002AA9D /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		11939B2728D326860028F0EF /* BlurEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
+		11939B2828D326860028F0EF /* URLImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLImage.swift; sourceTree = "<group>"; };
+		11939B3028D348D40028F0EF /* FieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldViewModel.swift; sourceTree = "<group>"; };
 		11D1166028D1C501002DB212 /* FBLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBLoginHelper.swift; sourceTree = "<group>"; };
 		11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginHelper.swift; sourceTree = "<group>"; };
 		11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginHelper.swift; sourceTree = "<group>"; };
@@ -83,6 +90,7 @@
 				1108A57428D0BF20007E19AA /* GoogleSignInSwift in Frameworks */,
 				1197F00E28D079D1002A9223 /* FirebaseDatabaseSwift in Frameworks */,
 				1197F01428D079D1002A9223 /* FirebaseFirestoreCombine-Community in Frameworks */,
+				11939B2D28D326FC0028F0EF /* CachedAsyncImage in Frameworks */,
 				11D1165D28D1C42E002DB212 /* FacebookLogin in Frameworks */,
 				1197F00A28D079D1002A9223 /* FirebaseCrashlytics in Frameworks */,
 				1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */,
@@ -151,7 +159,7 @@
 				113E57F028C9E4840002AA9D /* CNLoginApp.swift */,
 				113E580528CA1B180002AA9D /* SplashView.swift */,
 				113E580328CA1A380002AA9D /* MainView.swift */,
-				113E57F228C9E4840002AA9D /* CNLoginPageView.swift */,
+				11939B2E28D348A10028F0EF /* CNLoginPage */,
 				1108A56D28D0B106007E19AA /* Manager */,
 				1108A56C28D0B0F6007E19AA /* Extension */,
 				113E57FE28C9EBEC0002AA9D /* Tools */,
@@ -174,8 +182,27 @@
 			isa = PBXGroup;
 			children = (
 				113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */,
+				11939B2728D326860028F0EF /* BlurEffect.swift */,
+				11939B2828D326860028F0EF /* URLImage.swift */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		11939B2E28D348A10028F0EF /* CNLoginPage */ = {
+			isa = PBXGroup;
+			children = (
+				11939B2F28D348B30028F0EF /* ViewModel */,
+				113E57F228C9E4840002AA9D /* CNLoginPageView.swift */,
+			);
+			path = CNLoginPage;
+			sourceTree = "<group>";
+		};
+		11939B2F28D348B30028F0EF /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				11939B3028D348D40028F0EF /* FieldViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		11E52A3B28D1AE26004A1303 /* LoginManager */ = {
@@ -236,6 +263,7 @@
 				11D1165A28D1C42E002DB212 /* FacebookCore */,
 				11D1165C28D1C42E002DB212 /* FacebookLogin */,
 				11D1165E28D1C42E002DB212 /* FacebookShare */,
+				11939B2C28D326FC0028F0EF /* CachedAsyncImage */,
 			);
 			productName = CNLogin;
 			productReference = 113E57ED28C9E4840002AA9D /* CNLogin.app */;
@@ -271,6 +299,7 @@
 				11F4FD6D28D175C600C7B43E /* XCRemoteSwiftPackageReference "swift-crypto" */,
 				11F4FD7228D1817500C7B43E /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				11D1165528D1C42E002DB212 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				11939B2B28D326FB0028F0EF /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 			);
 			productRefGroup = 113E57EE28C9E4840002AA9D /* Products */;
 			projectDirPath = "";
@@ -307,11 +336,14 @@
 				11E52A3E28D1AE61004A1303 /* AppleLoginHelper.swift in Sources */,
 				113E580628CA1B180002AA9D /* SplashView.swift in Sources */,
 				113E580028C9EBEC0002AA9D /* ActivityIndicator.swift in Sources */,
+				11939B2A28D326860028F0EF /* URLImage.swift in Sources */,
 				113E57F128C9E4840002AA9D /* CNLoginApp.swift in Sources */,
 				11E52A4028D1AE6C004A1303 /* GoogleLoginHelper.swift in Sources */,
+				11939B3128D348D40028F0EF /* FieldViewModel.swift in Sources */,
 				11F4FD7628D181C600C7B43E /* KeychainHelper.swift in Sources */,
 				11F4FD7128D17B5C00C7B43E /* ExtensionString.swift in Sources */,
 				11EC9CC428D08441003A6DD0 /* AlertManager.swift in Sources */,
+				11939B2928D326860028F0EF /* BlurEffect.swift in Sources */,
 				11EC9CC228D081E8003A6DD0 /* LoginManager.swift in Sources */,
 				1108A56928D0B0AF007E19AA /* ExtensionUserDefaults.swift in Sources */,
 			);
@@ -530,6 +562,14 @@
 				minimumVersion = 6.0.0;
 			};
 		};
+		11939B2B28D326FB0028F0EF /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		1197F00428D079D1002A9223 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -574,6 +614,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1108A57028D0BF20007E19AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		11939B2C28D326FC0028F0EF /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 11939B2B28D326FB0028F0EF /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
 		};
 		1197F00528D079D1002A9223 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;

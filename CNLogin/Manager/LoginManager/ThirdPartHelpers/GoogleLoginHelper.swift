@@ -10,14 +10,20 @@ import GoogleSignIn
 
 class GoogleLoginHelper: NSObject {
   
-  func googleAutoLogin(alert: @escaping ((_ err: String?)->Void)) {
+  var didLoginComplete: ((_ isSuccess: Bool, _ msg: String?)->Void)?
+  
+  func googleAutoLogin() {
     
     guard GIDSignIn.sharedInstance.hasPreviousSignIn() else {
-      alert("hasNotPreviousSignIn")
+      didLoginComplete?(false, "hasNotPreviousSignIn")
       return
     }
     
-    GIDSignIn.sharedInstance.restorePreviousSignIn { user, err in
+    GIDSignIn.sharedInstance.restorePreviousSignIn {
+      
+      [weak self] user, err in
+      guard let self = self else {return}
+      
       if let err = err {
         print(err.localizedDescription)
         return
@@ -32,13 +38,13 @@ class GoogleLoginHelper: NSObject {
       
       Auth.auth().signIn(with: credential) { (_, err) in
         if let err = err {
-          alert(err.localizedDescription)
+          self.didLoginComplete?(false, err.localizedDescription)
           return
         }
         // 在此取得使用者資訊 Google user?.profile
 //        LoginManager.shared.googleProfile = user?.profile
         LoginManager.shared.notifyLoginSuccess(type: .google)
-        alert(nil)
+        self.didLoginComplete?(true, nil)
         
       }
       
@@ -46,7 +52,7 @@ class GoogleLoginHelper: NSObject {
     
   }
   
-  func googleLogin(alert: @escaping ((_ err: String?)->Void)) {
+  func googleLogin() {
     
     guard let clientID = FirebaseApp.app()?.options.clientID else { return }
     let configuration = GIDConfiguration(clientID: clientID)
@@ -54,7 +60,9 @@ class GoogleLoginHelper: NSObject {
     guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
     guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
     
-    GIDSignIn.sharedInstance.signIn(with: configuration, presenting: rootViewController) { user, err in
+    GIDSignIn.sharedInstance.signIn(with: configuration, presenting: rootViewController) {
+      [weak self] user, err in
+      guard let self = self else {return} 
       if let err = err {
         print(err.localizedDescription)
         return
@@ -69,13 +77,13 @@ class GoogleLoginHelper: NSObject {
       
       Auth.auth().signIn(with: credential) { authResult, err in
         if let err = err {
-          alert(err.localizedDescription)
+          self.didLoginComplete?(false, err.localizedDescription)
           return
         }
         // 在此取得使用者資訊 Google user?.profile
 //        LoginManager.shared.googleProfile = user?.profile
         LoginManager.shared.notifyLoginSuccess(type: .google)
-        alert(nil)
+        self.didLoginComplete?(true, nil)
         
       }
     }

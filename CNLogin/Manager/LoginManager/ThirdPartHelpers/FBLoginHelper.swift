@@ -30,37 +30,33 @@ class FBLoginHelper: NSObject {
     return FBSDKLoginKit.LoginManager()
   }()
   
-  func facebookLogin(alert: @escaping ((_ err: String?)->Void)) {
-    loginAndRequestPermissions(mode: .normal) { [weak self] in
-      guard let self = self else {return}
-      self.loginFBSuccess(alert: alert)
-    } errorHandler: { error in
-      alert(error.localizedDescription)
-    }
-  }
+  var didLoginComplete: ((_ isSuccess: Bool, _ msg: String?)->Void)?
   
-  private func loginAndRequestPermissions(mode: FBLoginMode,
-                                          successHandler: @escaping () -> Void,
-                                          errorHandler: ((Error)->Void)?) {
-    
-    fbLoginManager.logIn(permissions: mode.permissions, from: nil) { result, error  in
-      if let error = error {
-        errorHandler?(error)
+  func facebookLogin() {
+    fbLoginManager.logIn(permissions: FBLoginMode.normal.permissions, from: nil) {
+      [weak self] result, err in
+      guard let self = self else {return}
+      
+      if let err = err {
+        self.didLoginComplete?(false, err.localizedDescription)
         return
       }
       
-      if let _ = result {
-//        result.token
-//        if result.isCancelled {
-//            print("Cancel Facebook Login")
-//        }else {
-          successHandler()
-//        }
+      self.loginFBSuccess { err in
+        if let err = err {
+          self.didLoginComplete?(false, err)
+          return
+        }
+        
+        LoginManager.shared.notifyLoginSuccess(type: .facebook)
+        self.didLoginComplete?(true, nil)
+        
       }
     }
+    
   }
   
-  private func loginFBSuccess(alert: @escaping ((_ err: String?)->Void)) {
+  private func loginFBSuccess(errMsg: @escaping ((_ err: String?)->Void)) {
     guard AccessToken.current?.hasGranted(.email) == true else {
       // 沒有權限
       print("You don't have permission, please try again")
@@ -70,7 +66,7 @@ class FBLoginHelper: NSObject {
     GraphRequest(graphPath: "me", parameters: parameters).start { connecting, result, error in
       
       if let error = error {
-        alert(error.localizedDescription)
+        errMsg(error.localizedDescription)
         return
       }
       
@@ -102,7 +98,7 @@ class FBLoginHelper: NSObject {
       
       // 擷取用戶的access token，並通過調用將其轉換為Firebase的憑證
       guard let current = AccessToken.current else {
-        alert("Empty FB Token")
+        errMsg("Empty FB Token")
         return
       }
       
@@ -115,12 +111,11 @@ class FBLoginHelper: NSObject {
       
       Auth.auth().signIn(with: credential) { authResult, err in
         if let err = err {
-          alert(err.localizedDescription)
+          errMsg(err.localizedDescription)
           return
         }
         
-        LoginManager.shared.notifyLoginSuccess(type: .facebook)
-        alert(nil)
+        errMsg(nil)
         
       }
 //      self.delegate?.facbookLoginCompleteSuccess(memberData)

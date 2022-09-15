@@ -17,7 +17,7 @@ class AppleLoginHelper: NSObject {
   
   private var currentNonce: String?
   
-  var didComplete: ((_ err: String?)->Void)? = nil
+  var didLoginComplete: ((_ isSuccess: Bool, _ msg: String?)->Void)?
   
   func appleLogin() {
     let provider = ASAuthorizationAppleIDProvider()
@@ -33,25 +33,27 @@ class AppleLoginHelper: NSObject {
     controller.performRequests()
   }
   
-  func appleAutoLogin(alert: @escaping ((_ err: String?)->Void)) {
+  func appleAutoLogin() {
     
     let userId = UserDefaults.get(forKey: .appleUserIdKey) as? String ?? ""
     let appleIDProvider = ASAuthorizationAppleIDProvider()
     
-    appleIDProvider.getCredentialState(forUserID: userId) { (credentialState, error) in
+    appleIDProvider.getCredentialState(forUserID: userId) {
+      [weak self] (credentialState, error) in
+      guard let self = self else {return}
       if let err = error {
-        alert(err.localizedDescription)
+        self.didLoginComplete?(false, err.localizedDescription)
         return
       }
       
       guard credentialState == .authorized else {
-        alert("Apple Auto login not successful")
+        self.didLoginComplete?(false, "Apple Auto login not successful")
         return
       }
       
       print("Apple Auto login successful")
       LoginManager.shared.notifyLoginSuccess(type: .apple)
-      alert(nil)
+      self.didLoginComplete?(true, nil)
       
     }
   }
@@ -66,7 +68,7 @@ extension AppleLoginHelper: ASAuthorizationControllerDelegate {
           let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
           let appleIDToken = appleIDCredential.identityToken,
           let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-      self.didComplete?("Something wrong please try again!")
+      self.didLoginComplete?(false, "Something wrong please try again!")
       return
     }
     
@@ -74,9 +76,11 @@ extension AppleLoginHelper: ASAuthorizationControllerDelegate {
                                               idToken: idTokenString,
                                               rawNonce: nonce)
     
-    Auth.auth().signIn(with: credential) { authResult, err in
+    Auth.auth().signIn(with: credential) {
+      [weak self] authResult, err in
+      guard let self = self else {return} 
       if let err = err {
-        self.didComplete?(err.localizedDescription)
+        self.didLoginComplete?(false, err.localizedDescription)
         return
       }
       // 在此取得使用者資訊 Apple user?.profile
@@ -97,7 +101,7 @@ extension AppleLoginHelper: ASAuthorizationControllerDelegate {
 //      }
       UserDefaults.set(appleIDCredential.user, forKey: .appleUserIdKey)
       LoginManager.shared.notifyLoginSuccess(type: .apple)
-      self.didComplete?(nil)
+      self.didLoginComplete?(true, nil)
       
     }
   }
