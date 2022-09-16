@@ -7,17 +7,6 @@
 
 import SwiftUI
 
-struct CNLoginPageView_Previews: PreviewProvider {
-  static var previews: some View {
-    Group {
-      CNLoginPageView()
-        .preferredColorScheme(.light)
-      CNLoginPageView()
-        .preferredColorScheme(.dark)
-    }
-  }
-}
-
 // MARK: 登入或註冊頁
 struct CNLoginPageView: View {
   
@@ -44,6 +33,7 @@ struct CNLoginPageView: View {
   
   var body: some View {
     ZStack {
+      
       ScrollView(.vertical, showsIndicators: false) {
         LazyVStack {
           // Logo (url: 輸入Logo圖片網址)
@@ -51,17 +41,21 @@ struct CNLoginPageView: View {
           
           Text("App Name").font(.largeTitle)
           
-          // 登入/註冊
-          signModeSwitch
-          
-          // 登入/註冊 帳密輸入框&確認
-          switch signState {
-          case .signIn: signInView
-          case .signUp: signUpView
+          if loginManager.isLoading {
+            loadingView
+          }else {
+            // 登入/註冊
+            signModeSwitch
+            
+            // 登入/註冊 帳密輸入框&確認
+            switch signState {
+            case .signIn: signInView
+            case .signUp: signUpView
+            }
+            
+            // 登入/註冊、忘記密碼、三方登入
+            enterAreaView
           }
-          
-          // 登入/註冊、忘記密碼、三方登入
-          enterAreaView
         }
         .padding()
       }
@@ -81,7 +75,8 @@ struct CNLoginPageView: View {
           Button("Login") {
             loginManager.isSuccessRegister = false
             alertManager.close()
-            loginManager.mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass)
+            loginManager.isLoading = true
+            loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
           }
           
         }else {
@@ -96,11 +91,29 @@ struct CNLoginPageView: View {
       .onAppear {
         // 登入完成時觸發事件
         loginManager.needToShowAlert = { title, msg in
-          self.alertManager.show(title: title, msg: msg)
+          DispatchQueue.main.async {
+            self.loginManager.isLoading = false
+            guard let title = title, let msg = msg else {return}
+            self.alertManager.show(title: title, msg: msg)
+          }
         }
         
+        loginManager.loginAction(type: .autoLogin)
       }
+      
     }
+  }
+  
+  // MARK: 讀取畫面
+  private var loadingView: some View {
+    
+    VStack {
+      ActivityIndicator(isAnimating: .constant(true), style: .large)
+      Text("資料讀取中...")
+    }
+    .padding()
+    .background(Blur(style: .systemThinMaterial))
+    .cornerRadius(16)
   }
   
   // MARK: 登入/註冊切換按鈕
@@ -197,7 +210,7 @@ struct CNLoginPageView: View {
             .submitLabel(.done)
             .onSubmit {
               if focusedField == .inPass {
-                loginManager.mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass)
+                loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
               }
             }
         }else {
@@ -212,7 +225,7 @@ struct CNLoginPageView: View {
             .submitLabel(.done)
             .onSubmit {
               if focusedField == .inPass {
-                loginManager.mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass)
+                loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
               }
             }
         }
@@ -393,11 +406,12 @@ struct CNLoginPageView: View {
     VStack {
       
       HStack {
-        // 註冊按鈕
+        // 登入/註冊按鈕
         Button {
+          loginManager.isLoading = true
           switch signState {
           case .signIn:
-            loginManager.mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass)
+            loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
           case .signUp:
             fieldViewModel.signInPass = fieldViewModel.signUpPass
             loginManager.register(mail: fieldViewModel.signMail,pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass)
@@ -412,6 +426,7 @@ struct CNLoginPageView: View {
         
         // 忘記密碼
         Button {
+          loginManager.isLoading = true
           loginManager.resetPassword(mail: fieldViewModel.signMail)
         } label: {
           Text("Forget Password?")
@@ -431,7 +446,8 @@ struct CNLoginPageView: View {
       HStack(alignment: .center, spacing: 32) {
         
         Button {
-          loginManager.fbHelper.facebookLogin()
+          loginManager.isLoading = true
+          loginManager.loginAction(type: .fbLogin)
         } label: {
           URLImage(url: LoginType.facebook.iconUrl)
             .background(.white)
@@ -442,7 +458,8 @@ struct CNLoginPageView: View {
         .frame(width: iconWidth, height: iconWidth, alignment: .center)
         
         Button {
-          loginManager.googleHelper.googleLogin()
+          loginManager.isLoading = true
+          loginManager.loginAction(type: .googleLogin)
         } label: {
           URLImage(url: LoginType.google.iconUrl)
             .background(.white)
@@ -452,7 +469,8 @@ struct CNLoginPageView: View {
         .frame(width: iconWidth, height: iconWidth, alignment: .center)
         
         Button {
-          loginManager.appleHelper.appleLogin()
+          loginManager.isLoading = true
+          loginManager.loginAction(type: .appleLogin)
           
         } label: {
           URLImage(url: LoginType.apple.iconUrl)

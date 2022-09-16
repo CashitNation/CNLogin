@@ -17,7 +17,7 @@ class AppleLoginHelper: NSObject {
   
   private var currentNonce: String?
   
-  var didLoginComplete: ((_ isSuccess: Bool, _ msg: String?)->Void)?
+  var didLoginComplete: ((_ isSuccess: Bool?, _ msg: String?)->Void)?
   
   func appleLogin() {
     let provider = ASAuthorizationAppleIDProvider()
@@ -109,6 +109,7 @@ extension AppleLoginHelper: ASAuthorizationControllerDelegate {
   /// Apple登入失敗
   func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
     print("Apple登入失敗： \(error.localizedDescription)")
+    didLoginComplete?(nil, nil)
   }
   
 }

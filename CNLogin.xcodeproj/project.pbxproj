@@ -191,8 +191,8 @@
 		11939B2E28D348A10028F0EF /* CNLoginPage */ = {
 			isa = PBXGroup;
 			children = (
-				11939B2F28D348B30028F0EF /* ViewModel */,
 				113E57F228C9E4840002AA9D /* CNLoginPageView.swift */,
+				11939B2F28D348B30028F0EF /* ViewModel */,
 			);
 			path = CNLoginPage;
 			sourceTree = "<group>";

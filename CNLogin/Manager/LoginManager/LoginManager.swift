@@ -29,13 +29,17 @@ class LoginManager: ObservableObject {
   
   @Published var isLogin: Bool = false
   
+  @Published var isLoading: Bool = true
+  
   @Published var loginType: LoginType = LoginType(rawValue: UserDefaults.get(forKey: .loginTypeKey) as? String ?? "guest") ?? .guest
   
   @Published var isSuccessRegister = false
   
-  lazy var fbHelper = FBLoginHelper()
-  lazy var googleHelper = GoogleLoginHelper()
-  lazy var appleHelper = AppleLoginHelper()
+  private lazy var fbHelper = FBLoginHelper()
+  private lazy var googleHelper = GoogleLoginHelper()
+  private lazy var appleHelper = AppleLoginHelper()
+  
+  var needToShowAlert: ((_ title: String?, _ msg: String?)->Void)?
   
   static let shared = LoginManager()
   
@@ -44,24 +48,34 @@ class LoginManager: ObservableObject {
     fbHelper.didLoginComplete = {
       [weak self] isSuccess, msg in
       guard let self = self else {return}
-      self.needToShowAlert?(isSuccess ? "Success" : "Error", msg ?? "")
+      if let isSuccess = isSuccess {
+        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
+      }else {
+        self.needToShowAlert?(nil, nil)
+      }
     }
     
     googleHelper.didLoginComplete = {
       [weak self] isSuccess, msg in
       guard let self = self else {return}
-      self.needToShowAlert?(isSuccess ? "Success" : "Error", msg ?? "")
+      if let isSuccess = isSuccess {
+        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
+      }else {
+        self.needToShowAlert?(nil, nil)
+      }
     }
     
     appleHelper.didLoginComplete = {
       [weak self] isSuccess, msg in
       guard let self = self else {return}
-      self.needToShowAlert?(isSuccess ? "Success" : "Error", msg ?? "")
+      if let isSuccess = isSuccess {
+        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
+      }else {
+        self.needToShowAlert?(nil, nil)
+      }
     }
     
   }
-  
-  var needToShowAlert: ((_ title: String, _ msg: String)->Void)?
   
   func getEmail() -> String? {
     return Auth.auth().currentUser?.email
@@ -82,43 +96,51 @@ class LoginManager: ObservableObject {
       LoginManager.shared.loginType = type
       UserDefaults.set(type.rawValue, forKey: .loginTypeKey)
       NotificationCenter.post(forKey: .isLoginKey)
+      self.needToShowAlert?(nil, nil)
     }
   }
   
-  /// 執行登出
-  func logout() {
-    
-    googleHelper.googleLogout()
-    fbHelper.facebookLogout()
-    
-    do {
-      try Auth.auth().signOut()
-      LoginManager.shared.isLogin = false
-      UserDefaults.remove(forKey: .loginTypeKey)
-      UserDefaults.remove(forKey: .appleUserIdKey)
-      NotificationCenter.post(forKey: .isLoginKey)
-    } catch {
-      print(error.localizedDescription)
-    }
+}
+
+// MARK: 登入方法
+extension LoginManager {
+  
+  enum LoginAction {
+    case autoLogin
+    case mailLogin(mail: String, pass: String)
+    case fbLogin
+    case googleLogin
+    case appleLogin
   }
   
-  /// 執行刪除帳號並登出
-  func deleteAccount() {
-    Auth.auth().currentUser?.delete { _ in
-      LoginManager.shared.logout()
+  func loginAction(type: LoginAction) {
+    switch type {
+    case .autoLogin:
+      autoLogin()
+    case .mailLogin(let mail, let pass):
+      mailLogin(mail: mail, pass: pass)
+    case .fbLogin:
+      fbHelper.facebookLogin()
+    case .googleLogin:
+      googleHelper.googleLogin()
+    case .appleLogin:
+      appleHelper.appleLogin()
     }
   }
   
   /// 執行自動登入
-  func autoLogin() {
+  private func autoLogin() {
     
-    guard let user = Auth.auth().currentUser else {return}
+    guard let user = Auth.auth().currentUser else {
+      needToShowAlert?(nil, nil)
+      return
+    }
     print("@@ \(user.uid) \(user.displayName ?? "無") auto login with \(LoginManager.shared.loginType)")
     switch LoginManager.shared.loginType {
     case .mail:
       let mail = UserDefaults.get(forKey: .rememberMailKey) as? String ?? ""
       let pass = UserDefaults.get(forKey: .rememberPassKey) as? String ?? ""
-      self.mailLogin(mail: mail, pass: pass)
+      mailLogin(mail: mail, pass: pass)
     case .facebook:
       fbHelper.facebookLogin()
     case .google:
@@ -126,13 +148,13 @@ class LoginManager: ObservableObject {
     case .apple:
       appleHelper.appleAutoLogin()
     case .guest:
-      return
+      needToShowAlert?(nil, nil)
     }
     
   }
   
   /// 執行信箱登入
-  func mailLogin(mail:String, pass: String) {
+  private func mailLogin(mail:String, pass: String) {
     
     guard mail != "" && pass != "" else {
       needToShowAlert?("Error", "Please fill all the contents properly")
@@ -152,6 +174,11 @@ class LoginManager: ObservableObject {
       LoginManager.shared.notifyLoginSuccess(type: .mail)
     }
   }
+  
+}
+
+// MARK: 註冊/忘記密碼方法
+extension LoginManager {
   
   /// 執行註冊帳號 成功並帶登入
   func register(mail: String, pass: String, repass: String) {
@@ -199,6 +226,37 @@ class LoginManager: ObservableObject {
       }
       
       self.needToShowAlert?("Reset Success", "Password reset link has been sent successfully")
+    }
+  }
+  
+}
+
+// MARK: 登出刪除帳號
+extension LoginManager {
+  
+  /// 執行登出
+  func logout(callback: (()->Void)? = nil) {
+    
+    googleHelper.googleLogout()
+    fbHelper.facebookLogout()
+    
+    do {
+      try Auth.auth().signOut()
+      LoginManager.shared.isLogin = false
+      UserDefaults.remove(forKey: .loginTypeKey)
+      UserDefaults.remove(forKey: .appleUserIdKey)
+      NotificationCenter.post(forKey: .isLoginKey)
+      callback?()
+    } catch {
+      print(error.localizedDescription)
+      callback?()
+    }
+  }
+  
+  /// 執行刪除帳號並登出
+  func deleteAccount(callback: (()->Void)? = nil) {
+    Auth.auth().currentUser?.delete { _ in
+      LoginManager.shared.logout(callback: callback)
     }
   }
   

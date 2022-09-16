@@ -23,10 +23,7 @@ struct SplashView: View {
         
       }
       .onAppear {
-        
         loginManager.addObserverLogin()
-        loginManager.autoLogin()
-        
       }
     
   }
