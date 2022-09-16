@@ -32,7 +32,7 @@ class FBLoginHelper: NSObject {
   
   var didLoginComplete: ((_ isSuccess: Bool?, _ msg: String?)->Void)?
   
-  func facebookLogin() {
+  func facebookLogin(isAutoLogin: Bool = false) {
     fbLoginManager.logIn(permissions: FBLoginMode.normal.permissions, from: nil) {
       [weak self] result, err in
       guard let self = self else {return}
@@ -42,8 +42,9 @@ class FBLoginHelper: NSObject {
         return
       }
       
-      if let result = result, result.isCancelled {
+      if !isAutoLogin, let result = result, result.isCancelled {
         self.didLoginComplete?(nil, nil)
+        return
       }
       
       self.loginFBSuccess { err in

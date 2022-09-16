@@ -15,6 +15,10 @@ struct CNLoginApp: App {
   
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
   
+  init () {
+    FirebaseApp.configure()
+  }
+  
   var body: some Scene {
     WindowGroup {
       SplashView()
@@ -25,10 +29,7 @@ struct CNLoginApp: App {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
       
-      ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions
-      )
-      
-      FirebaseApp.configure()
+      ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
       
       return true
     }

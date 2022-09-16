@@ -135,14 +135,14 @@ extension LoginManager {
       needToShowAlert?(nil, nil)
       return
     }
-    print("@@ \(user.uid) \(user.displayName ?? "無") auto login with \(LoginManager.shared.loginType)")
+    print("@@ \(user.uid) \(user.email ?? "Empty Email") auto login with \(LoginManager.shared.loginType)")
     switch LoginManager.shared.loginType {
     case .mail:
       let mail = UserDefaults.get(forKey: .rememberMailKey) as? String ?? ""
       let pass = UserDefaults.get(forKey: .rememberPassKey) as? String ?? ""
       mailLogin(mail: mail, pass: pass)
     case .facebook:
-      fbHelper.facebookLogin()
+      fbHelper.facebookLogin(isAutoLogin: true)
     case .google:
       googleHelper.googleAutoLogin()
     case .apple:
