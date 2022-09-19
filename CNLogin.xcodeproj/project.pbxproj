@@ -37,6 +37,7 @@
 		1197F01A28D079D1002A9223 /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01928D079D1002A9223 /* FirebaseRemoteConfigSwift */; };
 		1197F01C28D079D1002A9223 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01B28D079D1002A9223 /* FirebaseStorage */; };
 		1197F01E28D079D1002A9223 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1197F01D28D079D1002A9223 /* FirebaseStorageCombine-Community */; };
+		11C5EAFB28D844540018B2AD /* ExtensionUIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C5EAFA28D844540018B2AD /* ExtensionUIApplication.swift */; };
 		11D1165728D1C42E002DB212 /* FacebookAEM in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165628D1C42E002DB212 /* FacebookAEM */; };
 		11D1165928D1C42E002DB212 /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165828D1C42E002DB212 /* FacebookBasics */; };
 		11D1165B28D1C42E002DB212 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 11D1165A28D1C42E002DB212 /* FacebookCore */; };
@@ -70,6 +71,7 @@
 		11939B2728D326860028F0EF /* BlurEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
 		11939B2828D326860028F0EF /* URLImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLImage.swift; sourceTree = "<group>"; };
 		11939B3028D348D40028F0EF /* FieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldViewModel.swift; sourceTree = "<group>"; };
+		11C5EAFA28D844540018B2AD /* ExtensionUIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUIApplication.swift; sourceTree = "<group>"; };
 		11D1166028D1C501002DB212 /* FBLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBLoginHelper.swift; sourceTree = "<group>"; };
 		11E52A3D28D1AE61004A1303 /* AppleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginHelper.swift; sourceTree = "<group>"; };
 		11E52A3F28D1AE6C004A1303 /* GoogleLoginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginHelper.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				1108A56828D0B0AF007E19AA /* ExtensionUserDefaults.swift */,
 				1108A57928D0D0FC007E19AA /* ExtensionView .swift */,
 				11F4FD7028D17B5C00C7B43E /* ExtensionString.swift */,
+				11C5EAFA28D844540018B2AD /* ExtensionUIApplication.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				113E57F328C9E4840002AA9D /* CNLoginPageView.swift in Sources */,
 				11D1166128D1C501002DB212 /* FBLoginHelper.swift in Sources */,
 				1108A57A28D0D0FC007E19AA /* ExtensionView .swift in Sources */,
+				11C5EAFB28D844540018B2AD /* ExtensionUIApplication.swift in Sources */,
 				1108A56B28D0B0C6007E19AA /* ExtensionNotificationCenter.swift in Sources */,
 				113E580428CA1A380002AA9D /* MainView.swift in Sources */,
 				11E52A3E28D1AE61004A1303 /* AppleLoginHelper.swift in Sources */,

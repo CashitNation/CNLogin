@@ -10,21 +10,31 @@ import Firebase
 
 class LoginManager: ObservableObject {
   
-  // 當前頁面 登入/註冊 狀態
+  /// 當前頁面 登入/註冊 狀態
   @Published var signState: SignState = .signIn
   
+  /// 當前登入狀態是否登入
   @Published var isLogin: Bool = false
   
+  /// 當前是否正在讀取中
   @Published var isLoading: Bool = true
   
+  /// 當前登入類型
   @Published var loginType: LoginType = LoginType(rawValue: UserDefaults.get(forKey: .loginTypeKey) as? String ?? "guest") ?? .guest
   
+  /// 是否為成功註冊
   @Published var isSuccessRegister = false
   
+  /// Facebook
   private lazy var fbHelper = FBLoginHelper()
+  
+  /// Google
   private lazy var googleHelper = GoogleLoginHelper()
+  
+  /// Apple
   private lazy var appleHelper = AppleLoginHelper()
   
+  /// 顯示彈窗內容
   var needToShowAlert: ((_ title: String?, _ msg: String?)->Void)?
   
   static let shared = LoginManager()
