@@ -10,25 +10,16 @@ import SwiftUI
 // MARK: 登入或註冊頁
 struct CNLoginPageView: View {
   
-  private enum SignState {
-    case signIn, signUp
-    var btnText: String {
-      switch self {
-      case .signIn: return "Sign In"
-      case .signUp: return "Sign Up"
-      }
-    }
-  }
-  
-  // 當前頁面 登入/註冊 狀態
-  @State private var signState: SignState = .signIn
-  
+  // 登入經理
   @StateObject private var loginManager = LoginManager.shared
   
+  // 彈窗經理
   @StateObject private var alertManager = AlertManager()
   
+  // 輸入框的ViewModel
   @StateObject private var fieldViewModel = FieldViewModel()
   
+  // Focus 當前的輸入框
   @FocusState private var focusedField: FieldViewModel.SignField?
   
   var body: some View {
@@ -48,7 +39,7 @@ struct CNLoginPageView: View {
             signModeSwitch
             
             // 登入/註冊 帳密輸入框&確認
-            switch signState {
+            switch loginManager.signState {
             case .signIn: signInView
             case .signUp: signUpView
             }
@@ -65,7 +56,8 @@ struct CNLoginPageView: View {
       }
       .alert(alertManager.title, isPresented: $alertManager.isShow) {
         
-        if loginManager.isSuccessRegister { // 如果成功註冊 詢問是否要立即登入
+        // 如果成功註冊 詢問是否要立即登入
+        if loginManager.isSuccessRegister {
           
           Button("Later", role: .cancel) {
             loginManager.isSuccessRegister = false
@@ -75,14 +67,12 @@ struct CNLoginPageView: View {
           Button("Login") {
             loginManager.isSuccessRegister = false
             alertManager.close()
-            loginManager.isLoading = true
+            
             loginManager.action(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
           }
           
         }else {
-          
           Button("OK", role: .cancel) { alertManager.close() }
-          
         }
         
       } message: {
@@ -124,31 +114,31 @@ struct CNLoginPageView: View {
       Button {
         
         withAnimation(.spring()) {
-          signState = .signIn
+          loginManager.signState = .signIn
         }
         
       } label: {
         Text("Sign In")
-          .foregroundColor(signState == .signIn ? .black : .white)
+          .foregroundColor(loginManager.signState == .signIn ? .black : .white)
           .padding(.vertical, 12)
           .frame(width: (UIScreen.main.bounds.width - 50) / 2)
       }
-      .background(signState == .signIn ? .white : .clear)
+      .background(loginManager.signState == .signIn ? .white : .clear)
       .clipShape(Capsule())
       
       Button {
         
         withAnimation(.spring()) {
-          signState = .signUp
+          loginManager.signState = .signUp
         }
         
       } label: {
         Text("Sign Up")
-          .foregroundColor(signState == .signUp ? .black : .white)
+          .foregroundColor(loginManager.signState == .signUp ? .black : .white)
           .padding(.vertical, 12)
           .frame(width: (UIScreen.main.bounds.width - 50) / 2)
       }
-      .background(signState == .signUp ? .white : .clear)
+      .background(loginManager.signState == .signUp ? .white : .clear)
       .clipShape(Capsule())
       
     }
@@ -408,8 +398,8 @@ struct CNLoginPageView: View {
       HStack {
         // 登入/註冊按鈕
         Button {
-          loginManager.isLoading = true
-          switch signState {
+          
+          switch loginManager.signState {
           case .signIn:
             loginManager.action(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
           case .signUp:
@@ -417,7 +407,7 @@ struct CNLoginPageView: View {
             loginManager.action(type: .register(mail: fieldViewModel.signMail,pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass))
           }
         } label: {
-          Text(signState.btnText)
+          Text(loginManager.signState.btnText)
             .padding()
         }
         .background(.white)
@@ -426,7 +416,7 @@ struct CNLoginPageView: View {
         
         // 忘記密碼
         Button {
-          loginManager.isLoading = true
+          
           loginManager.action(type: .resetPassword(mail: fieldViewModel.signMail))
         } label: {
           Text("Forget Password?")
@@ -446,10 +436,10 @@ struct CNLoginPageView: View {
       HStack(alignment: .center, spacing: 32) {
         
         Button {
-          loginManager.isLoading = true
+          
           loginManager.action(type: .fbLogin)
         } label: {
-          URLImage(url: LoginManager.LoginType.facebook.iconUrl)
+          URLImage(url: loginManager.getThirdPartIconUrl(type: .facebook))
             .background(.white)
             .clipShape(Circle())
             .shadow(radius: 8)
@@ -458,10 +448,9 @@ struct CNLoginPageView: View {
         .frame(width: iconWidth, height: iconWidth, alignment: .center)
         
         Button {
-          loginManager.isLoading = true
           loginManager.action(type: .googleLogin)
         } label: {
-          URLImage(url: LoginManager.LoginType.google.iconUrl)
+          URLImage(url: loginManager.getThirdPartIconUrl(type: .google))
             .background(.white)
             .clipShape(Circle())
             .shadow(radius: 8)
@@ -469,11 +458,11 @@ struct CNLoginPageView: View {
         .frame(width: iconWidth, height: iconWidth, alignment: .center)
         
         Button {
-          loginManager.isLoading = true
+          
           loginManager.action(type: .appleLogin)
           
         } label: {
-          URLImage(url: LoginManager.LoginType.apple.iconUrl)
+          URLImage(url: loginManager.getThirdPartIconUrl(type: .apple))
             .background(.white)
             .clipShape(Circle())
             .shadow(radius: 8)

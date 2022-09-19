@@ -10,6 +10,9 @@ import Firebase
 
 class LoginManager: ObservableObject {
   
+  // 當前頁面 登入/註冊 狀態
+  @Published var signState: SignState = .signIn
+  
   @Published var isLogin: Bool = false
   
   @Published var isLoading: Bool = true
@@ -31,8 +34,6 @@ class LoginManager: ObservableObject {
   }
   
   func getEmail() -> String? {
-    if let user: User = Auth.auth().currentUser {
-    }
     return Auth.auth().currentUser?.email
   }
   
@@ -41,6 +42,18 @@ class LoginManager: ObservableObject {
 /// 登入狀態相關
 extension LoginManager {
   
+  /// 當前畫面登入/註冊狀態
+  enum SignState {
+    case signIn, signUp
+    var btnText: String {
+      switch self {
+      case .signIn: return "Sign In"
+      case .signUp: return "Sign Up"
+      }
+    }
+  }
+  
+  /// 當前登入狀態相關
   enum LoginType: String {
     case mail = "mail"
     case facebook = "facebook"
@@ -56,6 +69,10 @@ extension LoginManager {
       default: return ""
       }
     }
+  }
+  
+  func getThirdPartIconUrl(type: LoginType) -> String {
+    return type.iconUrl
   }
   
   /// 新增登入觀察者
@@ -77,6 +94,7 @@ extension LoginManager {
     }
   }
   
+  /// 設定登入完成的Complete
   private func setupDidLoginComplete() {
     
     fbHelper.didLoginComplete = {
@@ -130,6 +148,7 @@ extension LoginManager {
   
   /// 執行動作
   func action(type: ActionType) {
+    isLoading = true
     switch type {
     case .autoLogin:
       autoLogin()
