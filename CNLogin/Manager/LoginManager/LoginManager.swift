@@ -27,45 +27,18 @@ class LoginManager: ObservableObject {
   static let shared = LoginManager()
   
   private init() {
-    
-    fbHelper.didLoginComplete = {
-      [weak self] isSuccess, msg in
-      guard let self = self else {return}
-      if let isSuccess = isSuccess {
-        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
-      }else {
-        self.needToShowAlert?(nil, nil)
-      }
-    }
-    
-    googleHelper.didLoginComplete = {
-      [weak self] isSuccess, msg in
-      guard let self = self else {return}
-      if let isSuccess = isSuccess {
-        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
-      }else {
-        self.needToShowAlert?(nil, nil)
-      }
-    }
-    
-    appleHelper.didLoginComplete = {
-      [weak self] isSuccess, msg in
-      guard let self = self else {return}
-      if let isSuccess = isSuccess {
-        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
-      }else {
-        self.needToShowAlert?(nil, nil)
-      }
-    }
-    
+    setupDidLoginComplete()
   }
   
   func getEmail() -> String? {
+    if let user: User = Auth.auth().currentUser {
+    }
     return Auth.auth().currentUser?.email
   }
   
 }
 
+/// 登入狀態相關
 extension LoginManager {
   
   enum LoginType: String {
@@ -101,6 +74,39 @@ extension LoginManager {
       UserDefaults.set(type.rawValue, forKey: .loginTypeKey)
       NotificationCenter.post(forKey: .isLoginKey)
       self.needToShowAlert?(nil, nil)
+    }
+  }
+  
+  private func setupDidLoginComplete() {
+    
+    fbHelper.didLoginComplete = {
+      [weak self] isSuccess, msg in
+      guard let self = self else {return}
+      if let isSuccess = isSuccess {
+        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
+      }else {
+        self.needToShowAlert?(nil, nil)
+      }
+    }
+    
+    googleHelper.didLoginComplete = {
+      [weak self] isSuccess, msg in
+      guard let self = self else {return}
+      if let isSuccess = isSuccess {
+        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
+      }else {
+        self.needToShowAlert?(nil, nil)
+      }
+    }
+    
+    appleHelper.didLoginComplete = {
+      [weak self] isSuccess, msg in
+      guard let self = self else {return}
+      if let isSuccess = isSuccess {
+        self.needToShowAlert?(isSuccess ? "Success" : "Error", msg)
+      }else {
+        self.needToShowAlert?(nil, nil)
+      }
     }
   }
   
