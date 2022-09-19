@@ -8,23 +8,6 @@
 import SwiftUI
 import Firebase
 
-enum LoginType: String {
-  case mail = "mail"
-  case facebook = "facebook"
-  case google = "google"
-  case apple = "apple"
-  case guest = "guest"
-  
-  var iconUrl: String {
-    switch self {
-    case .facebook: return "https://cdn-icons-png.flaticon.com/512/124/124010.png"
-    case .google: return "https://cdn-icons-png.flaticon.com/512/300/300221.png"
-    case .apple: return "https://cdn-icons-png.flaticon.com/512/0/747.png"
-    default: return ""
-    }
-  }
-}
-
 class LoginManager: ObservableObject {
   
   @Published var isLogin: Bool = false
@@ -81,6 +64,27 @@ class LoginManager: ObservableObject {
     return Auth.auth().currentUser?.email
   }
   
+}
+
+extension LoginManager {
+  
+  enum LoginType: String {
+    case mail = "mail"
+    case facebook = "facebook"
+    case google = "google"
+    case apple = "apple"
+    case guest = "guest"
+    
+    var iconUrl: String {
+      switch self {
+      case .facebook: return "https://cdn-icons-png.flaticon.com/512/124/124010.png"
+      case .google: return "https://cdn-icons-png.flaticon.com/512/300/300221.png"
+      case .apple: return "https://cdn-icons-png.flaticon.com/512/0/747.png"
+      default: return ""
+      }
+    }
+  }
+  
   /// 新增登入觀察者
   func addObserverLogin(using block: ((Notification) -> Void)? = nil) {
     NotificationCenter.add(forKey: .isLoginKey) { notification in
@@ -102,18 +106,24 @@ class LoginManager: ObservableObject {
   
 }
 
-// MARK: 登入方法
+// MARK: 登入/註冊/重設密碼/登出/刪除帳號
 extension LoginManager {
   
-  enum LoginAction {
+  /// 執行動作種類
+  enum ActionType {
     case autoLogin
     case mailLogin(mail: String, pass: String)
     case fbLogin
     case googleLogin
     case appleLogin
+    case register(mail: String, pass: String, repass: String)
+    case resetPassword(mail: String)
+    case logout
+    case deleteAccount
   }
   
-  func loginAction(type: LoginAction) {
+  /// 執行動作
+  func action(type: ActionType) {
     switch type {
     case .autoLogin:
       autoLogin()
@@ -125,6 +135,14 @@ extension LoginManager {
       googleHelper.googleLogin()
     case .appleLogin:
       appleHelper.appleLogin()
+    case .register(let mail, let pass, let repass):
+      register(mail: mail, pass: pass, repass: repass)
+    case .resetPassword(let mail):
+      resetPassword(mail: mail)
+    case .logout:
+      logout()
+    case .deleteAccount:
+      deleteAccount()
     }
   }
   
@@ -175,13 +193,8 @@ extension LoginManager {
     }
   }
   
-}
-
-// MARK: 註冊/忘記密碼方法
-extension LoginManager {
-  
   /// 執行註冊帳號 成功並帶登入
-  func register(mail: String, pass: String, repass: String) {
+  private func register(mail: String, pass: String, repass: String) {
     
     guard mail != "" && pass != "" && repass != "" else {
       self.needToShowAlert?("Error", "Please fill all the contents properly")
@@ -212,7 +225,7 @@ extension LoginManager {
   }
   
   /// 執行重新設定密碼 信箱認證
-  func resetPassword(mail: String) {
+  private func resetPassword(mail: String) {
     guard mail != "" else {
       self.needToShowAlert?("Error", "Email is empty")
       return
@@ -229,13 +242,8 @@ extension LoginManager {
     }
   }
   
-}
-
-// MARK: 登出刪除帳號
-extension LoginManager {
-  
   /// 執行登出
-  func logout(callback: (()->Void)? = nil) {
+  private func logout(callback: (()->Void)? = nil) {
     
     googleHelper.googleLogout()
     fbHelper.facebookLogout()
@@ -254,7 +262,7 @@ extension LoginManager {
   }
   
   /// 執行刪除帳號並登出
-  func deleteAccount(callback: (()->Void)? = nil) {
+  private func deleteAccount(callback: (()->Void)? = nil) {
     Auth.auth().currentUser?.delete { _ in
       LoginManager.shared.logout(callback: callback)
     }

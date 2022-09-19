@@ -17,14 +17,14 @@ struct MainView: View {
             Text("MainView")
             
             Button {
-              loginManager.logout()
+              loginManager.action(type: .logout)
             } label: {
                 Text("Log out")
             }
             .padding()
             
             Button {
-              loginManager.deleteAccount()
+              loginManager.action(type: .deleteAccount)
             } label: {
                 Text("Delete Account")
             }

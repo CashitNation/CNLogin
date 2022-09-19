@@ -76,7 +76,7 @@ struct CNLoginPageView: View {
             loginManager.isSuccessRegister = false
             alertManager.close()
             loginManager.isLoading = true
-            loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
+            loginManager.action(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
           }
           
         }else {
@@ -98,7 +98,7 @@ struct CNLoginPageView: View {
           }
         }
         
-        loginManager.loginAction(type: .autoLogin)
+        loginManager.action(type: .autoLogin)
       }
       
     }
@@ -210,7 +210,7 @@ struct CNLoginPageView: View {
             .submitLabel(.done)
             .onSubmit {
               if focusedField == .inPass {
-                loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
+                loginManager.action(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
               }
             }
         }else {
@@ -225,7 +225,7 @@ struct CNLoginPageView: View {
             .submitLabel(.done)
             .onSubmit {
               if focusedField == .inPass {
-                loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
+                loginManager.action(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
               }
             }
         }
@@ -358,7 +358,7 @@ struct CNLoginPageView: View {
             .submitLabel(.done)
             .onSubmit {
               if focusedField == .upRepass {
-                loginManager.register(mail: fieldViewModel.signMail,pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass)
+                loginManager.action(type: .register(mail: fieldViewModel.signMail, pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass))
               }
             }
         }else {
@@ -373,7 +373,7 @@ struct CNLoginPageView: View {
             .submitLabel(.done)
             .onSubmit {
               if focusedField == .upRepass {
-                loginManager.register(mail: fieldViewModel.signMail,pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass)
+                loginManager.action(type: .register(mail: fieldViewModel.signMail, pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass))
               }
             }
         }
@@ -411,10 +411,10 @@ struct CNLoginPageView: View {
           loginManager.isLoading = true
           switch signState {
           case .signIn:
-            loginManager.loginAction(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
+            loginManager.action(type: .mailLogin(mail: fieldViewModel.signMail, pass: fieldViewModel.signInPass))
           case .signUp:
             fieldViewModel.signInPass = fieldViewModel.signUpPass
-            loginManager.register(mail: fieldViewModel.signMail,pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass)
+            loginManager.action(type: .register(mail: fieldViewModel.signMail,pass: fieldViewModel.signUpPass, repass: fieldViewModel.signUpRepass))
           }
         } label: {
           Text(signState.btnText)
@@ -427,7 +427,7 @@ struct CNLoginPageView: View {
         // 忘記密碼
         Button {
           loginManager.isLoading = true
-          loginManager.resetPassword(mail: fieldViewModel.signMail)
+          loginManager.action(type: .resetPassword(mail: fieldViewModel.signMail))
         } label: {
           Text("Forget Password?")
             .foregroundColor(.white)
@@ -447,9 +447,9 @@ struct CNLoginPageView: View {
         
         Button {
           loginManager.isLoading = true
-          loginManager.loginAction(type: .fbLogin)
+          loginManager.action(type: .fbLogin)
         } label: {
-          URLImage(url: LoginType.facebook.iconUrl)
+          URLImage(url: LoginManager.LoginType.facebook.iconUrl)
             .background(.white)
             .clipShape(Circle())
             .shadow(radius: 8)
@@ -459,9 +459,9 @@ struct CNLoginPageView: View {
         
         Button {
           loginManager.isLoading = true
-          loginManager.loginAction(type: .googleLogin)
+          loginManager.action(type: .googleLogin)
         } label: {
-          URLImage(url: LoginType.google.iconUrl)
+          URLImage(url: LoginManager.LoginType.google.iconUrl)
             .background(.white)
             .clipShape(Circle())
             .shadow(radius: 8)
@@ -470,10 +470,10 @@ struct CNLoginPageView: View {
         
         Button {
           loginManager.isLoading = true
-          loginManager.loginAction(type: .appleLogin)
+          loginManager.action(type: .appleLogin)
           
         } label: {
-          URLImage(url: LoginType.apple.iconUrl)
+          URLImage(url: LoginManager.LoginType.apple.iconUrl)
             .background(.white)
             .clipShape(Circle())
             .shadow(radius: 8)
