@@ -18,7 +18,7 @@
 		113E57F528C9E4860002AA9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 113E57F428C9E4860002AA9D /* Assets.xcassets */; };
 		113E57F828C9E4860002AA9D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 113E57F728C9E4860002AA9D /* Preview Assets.xcassets */; };
 		113E580028C9EBEC0002AA9D /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */; };
-		113E580428CA1A380002AA9D /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E580328CA1A380002AA9D /* MainView.swift */; };
+		113E580428CA1A380002AA9D /* MainTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E580328CA1A380002AA9D /* MainTabBarView.swift */; };
 		113E580628CA1B180002AA9D /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113E580528CA1B180002AA9D /* SplashView.swift */; };
 		11939B2928D326860028F0EF /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11939B2728D326860028F0EF /* BlurEffect.swift */; };
 		11939B2A28D326860028F0EF /* URLImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11939B2828D326860028F0EF /* URLImage.swift */; };
@@ -66,7 +66,7 @@
 		113E57F428C9E4860002AA9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		113E57F728C9E4860002AA9D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		113E57FF28C9EBEC0002AA9D /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
-		113E580328CA1A380002AA9D /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		113E580328CA1A380002AA9D /* MainTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarView.swift; sourceTree = "<group>"; };
 		113E580528CA1B180002AA9D /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		11939B2728D326860028F0EF /* BlurEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
 		11939B2828D326860028F0EF /* URLImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLImage.swift; sourceTree = "<group>"; };
@@ -161,7 +161,7 @@
 				1108A57528D0BF3F007E19AA /* Info.plist */,
 				113E57F028C9E4840002AA9D /* CNLoginApp.swift */,
 				113E580528CA1B180002AA9D /* SplashView.swift */,
-				113E580328CA1A380002AA9D /* MainView.swift */,
+				113E580328CA1A380002AA9D /* MainTabBarView.swift */,
 				11939B2E28D348A10028F0EF /* CNLoginPage */,
 				1108A56D28D0B106007E19AA /* Manager */,
 				1108A56C28D0B0F6007E19AA /* Extension */,
@@ -336,7 +336,7 @@
 				1108A57A28D0D0FC007E19AA /* ExtensionView .swift in Sources */,
 				11C5EAFB28D844540018B2AD /* ExtensionUIApplication.swift in Sources */,
 				1108A56B28D0B0C6007E19AA /* ExtensionNotificationCenter.swift in Sources */,
-				113E580428CA1A380002AA9D /* MainView.swift in Sources */,
+				113E580428CA1A380002AA9D /* MainTabBarView.swift in Sources */,
 				11E52A3E28D1AE61004A1303 /* AppleLoginHelper.swift in Sources */,
 				113E580628CA1B180002AA9D /* SplashView.swift in Sources */,
 				113E580028C9EBEC0002AA9D /* ActivityIndicator.swift in Sources */,

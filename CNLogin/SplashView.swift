@@ -16,7 +16,7 @@ struct SplashView: View {
       ZStack {
         
         if loginManager.isLogin {
-          MainView()
+          MainTabBarView()
         }else {
           CNLoginPageView()
         }

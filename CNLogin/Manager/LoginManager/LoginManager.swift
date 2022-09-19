@@ -43,8 +43,8 @@ class LoginManager: ObservableObject {
     setupDidLoginComplete()
   }
   
-  func getEmail() -> String? {
-    return Auth.auth().currentUser?.email
+  func getUser() -> User? {
+    return Auth.auth().currentUser
   }
   
 }
