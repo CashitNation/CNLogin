@@ -83,22 +83,6 @@ extension AppleLoginHelper: ASAuthorizationControllerDelegate {
         self.didLoginComplete?(false, err.localizedDescription)
         return
       }
-      // 在此取得使用者資訊 Apple user?.profile
-//      let userName = self.keychainHelper.getValue(KeychainHelper.Keys.appleUserName.rawValue)
-//      let photoURL = authResult.user.photoURL?.absoluteString ?? ""
-//      let userIdentifier = appleIDCredential.user
-//      let givenName = appleIDCredential.fullName?.givenName ?? ""
-//      let familyName = appleIDCredential.fullName?.familyName ?? ""
-//      let email = appleIDCredential.email ?? ""
-//      let identityToken = idTokenString
-//      let name: String
-//      if let userName = userName {
-//          name = userName
-//      } else {
-//          // apple登入只有第一次拿得到fullName，需要存起來
-//          name = "\(familyName)\(givenName)"
-//          self.keychainHelper.setKey(KeychainHelper.Keys.appleUserName.rawValue, to: "\(familyName)\(givenName)")
-//      }
       UserDefaults.set(appleIDCredential.user, forKey: .appleUserIdKey)
       LoginManager.shared.notifyLoginSuccess(type: .apple)
       self.didLoginComplete?(true, nil)

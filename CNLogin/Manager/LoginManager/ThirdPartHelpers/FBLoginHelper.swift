@@ -75,32 +75,6 @@ class FBLoginHelper: NSObject {
         return
       }
       
-      // 在此取得使用者資訊 result
-//      guard let result = result as? [String : Any] else { return }
-//      let name = result["name"] as? String
-//      let email = result["email"] as? String ?? ""
-//      let token = AccessToken.current?.tokenString
-//      let picture = result["picture"] as? [String : Any]
-//      let data = picture?["data"] as? [String : Any]
-//      let urlString = data?["url"] as? String ?? ""
-//      guard let token = token, token != "" else {
-//        // "無法取得認證資料，請重新登入，或是換組帳號嘗試登入"
-//        alert("You don't have permission, please try again")
-//        return
-//      }
-//      var userName = email
-//      if let name = name, name != "" {
-//        userName = name
-//      }
-//      let fbAppId = Bundle.main.infoDictionary?["FacebookAppID"] as? String ?? "197209001129520"
-//      let memberData: [String : String] = [
-//        "name": userName,
-//        "email": email,
-//        "avatar": urlString,
-//        "auth_token": token,
-//        "app_id": fbAppId
-//      ]
-      
       // 擷取用戶的access token，並通過調用將其轉換為Firebase的憑證
       guard let current = AccessToken.current else {
         errMsg("Empty FB Token")
@@ -123,9 +97,7 @@ class FBLoginHelper: NSObject {
         errMsg(nil)
         
       }
-//      self.delegate?.facbookLoginCompleteSuccess(memberData)
-      // 登入拿到資料後就登出FB
-//      self.facebookLogout()
+      
     }
   }
   

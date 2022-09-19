@@ -43,8 +43,7 @@ class GoogleLoginHelper: NSObject {
           self.didLoginComplete?(false, err.localizedDescription)
           return
         }
-        // 在此取得使用者資訊 Google user?.profile
-//        LoginManager.shared.googleProfile = user?.profile
+        
         LoginManager.shared.notifyLoginSuccess(type: .google)
         self.didLoginComplete?(true, nil)
       }
@@ -89,8 +88,6 @@ class GoogleLoginHelper: NSObject {
           self.didLoginComplete?(false, err.localizedDescription)
           return
         }
-        // 在此取得使用者資訊 Google user?.profile
-//        LoginManager.shared.googleProfile = user?.profile
         LoginManager.shared.notifyLoginSuccess(type: .google)
         self.didLoginComplete?(true, nil)
       }
